@@ -1,0 +1,137 @@
+\documentclass[12pt,notitlepage]{report}
+\usepackage{thesis}
+\usepackage{preamble}
+\usepackage{import}
+\usepackage{sourcecode}
+\usepackage{pythonhighlight}
+\graphicspath{%
+  {l2hmc_paper/figures/}{figures/}%
+  {ising_worm_paper/figures/}{figures/}%
+  {machine_learning/figures/}{figures/}%
+}
+\author{Samuel Foreman}
+
+\title{\MakeUppercase{\normalsize\mytitle}\vspace{-2em}}
+\author{\vspace{-5ex}}
+\date{\vspace{-5ex}}
+
+\begin{document}
+
+\maketitle
+
+% frontmatter_settings {{{
+%% roman for frontmatter
+\pagenumbering{roman}
+\thispagestyle{empty}
+% \longvertspacing%
+\bigvertspace%%
+\begin{tightcenter}
+    by
+\end{tightcenter}
+\mylinespacing%
+\begin{tightcenter}
+    \myname%
+\end{tightcenter}
+\longvertspacing%
+\begin{tightcenter}
+A thesis submitted in partial fulfillment \\
+of the requirements for the \\
+\mydegree~\\
+degree in \myprogram~\\
+in the Graduate College of \\
+The University of Iowa
+\end{tightcenter}
+\mylinespacing%
+\begin{tightcenter}
+\mymonth~\myyear%
+\end{tightcenter}
+\mylinespacing%
+\begin{tightcenter}
+Thesis Supervisor: \myadvisor%
+\end{tightcenter}
+%
+\newpage
+\signaturepg%
+% }}}
+%  separate_pages {{{
+%% copyright page %%
+\include{1_copyright}
+%% copyright page %%
+
+\pagenumbering{roman} 
+\setcounter{page}{2}
+%% dedication page %%
+\include{2_dedication}
+%% dedication page %%
+
+%% epigraph page %%
+\include{3_epigraph}
+%% epigraph page %%
+
+%% ack page %%
+\include{4_ack}
+%% ack page %%
+
+%% abs page %%
+\include{5_abs}
+%% abs page %%
+
+%% public abs page %%
+\include{6_public_abs}
+%% public abs page %%
+
+%% content lists %%
+\include{7_toc}
+%% content lists %%
+
+% preface {{{
+\include{8_preface}
+% }}}
+
+%% arabic for the rest
+\pagenumbering{arabic}
+% }}}
+
+\begin{doublespace}
+
+\chapter{Introduction}%
+\label{chap:introduction}
+\subfile{introduction/introduction.tex}
+
+\chapter{Machine Learning: An Overview}%
+\label{chap:machine_learning}
+\subfile{machine_learning/machine_learning.tex}
+
+\chapter{Unsupervised Learning: Ising Worms}%
+\label{chap:unsupervised_learning}
+\subfile{ising_worm_paper/preising.tex}
+%
+\chapter{Semi-Supervised Learning: L2HMC}%
+\label{chap:semi_supervised_learning}
+\subfile{l2hmc_paper/l2hmc_writeup.tex}
+
+%% main contents %%
+% \include{9_chap_1}
+% \include{9_chap_2}
+% \include{9_chap_3}
+%% main contents %%
+
+% \include{appendix_code}
+% \include{9_chap_a}
+% \include{9_chap_b}
+
+% \include{source_code/appendix_code}
+% appendix {{{
+\appendix%[heading=bibintoc]
+\chapter{Appendix}
+\subfile{source_code/appendix_code.tex}
+% }}}
+
+% references {{{
+\clearpage
+\printbibliography[title={References}, heading=bibintoc]
+% \printbibliography[title={References}, heading=bibintoc]
+% }}}
+
+\end{doublespace}
+\end{document}

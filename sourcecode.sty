@@ -1,0 +1,64 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sourcecode}
+% \UseRawInputEncoding%
+% \newcommand{\hbAppendixPrefix}{A}
+% \makeatletter
+% \def\input@path{{../}}
+% \makeatother
+% \documentclass[../main.tex]{subfiles}
+% \renewcommand{\thefigure}{\hbAppendixPrefix.\arabic{figure}}
+% \setcounter{figure}{0}
+% \renewcommand{\thetable}{\hbAppendixPrefix.\arabic{table}}
+% \setcounter{table}{0}
+%
+% \let\svaddcontentsline\addcontentsline%
+% \renewcommand\addcontentsline[3]{%
+%       \ifthenelse{\equal{#1}{lof}}{}%
+%         {\ifthenelse{\equal{#1}{lot}}{}{\svaddcontentsline{#1}{#2}{#3}}}}
+
+% \newcommand{\hbAppendixPrefix}{A}
+% \renewcommand{\thefigure}{\hbAppendixPrefix.\arabic{figure}}
+% \setcounter{figure}{0}
+% \renewcommand{\thetable}{\hbAppendixPrefix.\arabic{table}}
+% \setcounter{table}{0}
+%
+% \let\svaddcontentsline\addcontentsline%
+% \renewcommand\addcontentsline[3]{%
+%       \ifthenelse{\equal{#1}{lof}}{}%
+%         {\ifthenelse{\equal{#1}{lot}}{}{\svaddcontentsline{#1}{#2}{#3}}}}
+
+\setcounter{secnumdepth}{3}
+
+% \newcommand{\includecode}[1][python]{\lstin\lstset{language=Python}
+
+% \lstset{frame=lines}
+% \lstset{caption={Insert code directly in your document}}
+% \lstset{label={lst:code_direct}}
+% \lstset{basicstyle=\footnotesize}\putlisting[caption=#1]{#1}<!---->}
+
+
+
+% Custom colors
+% \usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+% \definecolor{codeblue}{RGB}{93,173,226}
+\definecolor{codeblue}{RGB}{52,152,219}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{darkgray}{rgb}{0.278,0.278,0.278}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+% \definecolor{codered}{RGB}{236,112,99}
+\definecolor{codered}{RGB}{231,76,60}
+\definecolor{codeorange}{RGB}{248,196,113}
+% \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% \newcommand{\includecode}[2][python]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}<!---->}
+
+% Default fixed font does not support bold face
+% \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+% \DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal

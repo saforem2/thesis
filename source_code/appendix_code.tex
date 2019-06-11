@@ -1,0 +1,220 @@
+\UseRawInputEncoding%
+% % \newcommand{\hbAppendixPrefix}{A}
+% % \makeatletter
+% % \def\input@path{{../}}
+% % \makeatother
+% % \documentclass[../main.tex]{subfiles}
+% \renewcommand{\thefigure}{\hbAppendixPrefix.\arabic{figure}}
+% \setcounter{figure}{0}
+% \renewcommand{\thetable}{\hbAppendixPrefix.\arabic{table}}
+% \setcounter{table}{0}
+%
+% \let\svaddcontentsline\addcontentsline%
+% \renewcommand\addcontentsline[3]{%
+%       \ifthenelse{\equal{#1}{lof}}{}%
+%         {\ifthenelse{\equal{#1}{lot}}{}{\svaddcontentsline{#1}{#2}{#3}}}}
+%
+% % \newcommand{\hbAppendixPrefix}{A}
+% % \renewcommand{\thefigure}{\hbAppendixPrefix.\arabic{figure}}
+% % \setcounter{figure}{0}
+% % \renewcommand{\thetable}{\hbAppendixPrefix.\arabic{table}}
+% % \setcounter{table}{0}
+% %
+% % \let\svaddcontentsline\addcontentsline%
+% % \renewcommand\addcontentsline[3]{%
+% %       \ifthenelse{\equal{#1}{lof}}{}%
+% %         {\ifthenelse{\equal{#1}{lot}}{}{\svaddcontentsline{#1}{#2}{#3}}}}
+%
+% \setcounter{secnumdepth}{3}
+%
+% % \newcommand{\includecode}[1][python]{\lstin\lstset{language=Python}
+%
+% % \lstset{frame=lines}
+% % \lstset{caption={Insert code directly in your document}}
+% % \lstset{label={lst:code_direct}}
+% % \lstset{basicstyle=\footnotesize}\putlisting[caption=#1]{#1}<!---->}
+%
+%
+%
+% % Custom colors
+% % \usepackage{color}
+% \definecolor{mygreen}{rgb}{0,0.6,0}
+% \definecolor{mygray}{rgb}{0.5,0.5,0.5}
+% \definecolor{mymauve}{rgb}{0.58,0,0.82}
+% \definecolor{deepblue}{rgb}{0,0,0.5}
+% % \definecolor{codeblue}{RGB}{93,173,226}
+% \definecolor{codeblue}{RGB}{52,152,219}
+% \definecolor{deepred}{rgb}{0.6,0,0}
+% \definecolor{deepgreen}{rgb}{0,0.5,0}
+% \definecolor{codegreen}{rgb}{0,0.6,0}
+% \definecolor{codegray}{rgb}{0.5,0.5,0.5}
+% \definecolor{darkgray}{rgb}{0.278,0.278,0.278}
+% \definecolor{codepurple}{rgb}{0.58,0,0.82}
+% % \definecolor{codered}{RGB}{236,112,99}
+% \definecolor{codered}{RGB}{231,76,60}
+% \definecolor{codeorange}{RGB}{248,196,113}
+% % \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+%
+% % \newcommand{\includecode}[2][python]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}<!---->}
+%
+% % Default fixed font does not support bold face
+% % \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+% % \DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+ 
+\begin{document}
+% \clearpage
+
+% \section{APPENDIX \hbAppendixPrefix: l2hmc-qcd}
+% \section{APPENDIX \hbAppendixPrefix: Test for appendix}
+\section{APPENDIX \hbAppendixPrefix: l2hmc-qcd}
+Included below is the source code used for building, training, running and analyzing the L2HMC algorithm on the $2D\,\,
+U(1)$ lattice gauge theory model. This code is also publicly hosted at \url{https://github.com/saforem2/l2hmc-qcd}
+
+\lstset{%
+  basicstyle=\ttm,
+  keywordstyle=\ttb\color{deepblue},
+  emphstyle=\ttb\color{deepred},
+  frame=tb,
+  showstringspaces=false
+}
+
+\subsection{README.md}
+\lstset{style=markdown}
+\lstinputlisting{/Users/saforem2/ANL/l2hmc-qcd/README.md}
+
+\clearpage
+\subsection{l2hmc-qcd/args/gauge\_model\_args.txt}
+% \lstset{style=markdown}
+\lstinputlisting{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/args/gauge_model_args.txt}
+
+% \lstset{%
+%   language=Python,
+%   basicstyle=\ttm,
+%   % otherkeywords={self, Args, NOTE, Returns, __init__,},
+%   otherkeywords={__init__, Args, NOTE, Returns, Attributes},
+%   keywordstyle=\ttb\color{codered},
+%   % emph={MyClass,__init__},
+%   emph={self, Args, NOTE, Returns, Attributes},
+%   emphstyle={\ttb\color{codeblue}},
+%   frame=tb,
+%   showstringspaces=false
+% }
+% \inputmintedp{}{/Users/saforem2/ANL/l2hmc-qcd/README.md}
+% ...
+
+% files to include {{{
+% l2hmc-qcd/README.md
+% l2hmc-qcd/globals.py
+% l2hmc-qcd/lattice/lattice.py
+% l2hmc-qcd/loggers/run_logger.py
+% l2hmc-qcd/loggers/train_logger.py
+% l2hmc-qcd/network/conv_net.py
+% l2hmc-qcd/plotters/leapfrog_plotters.py
+% l2hmc-qcd/plotters/gauge_model_plotter.py
+% l2hmc-qcd/runners/gauge_model_runner.py
+% l2hmc-qcd/trainers/gauge_model_trainer.py
+% l2hmc-qcd/utils/file_io.py
+% l2hmc-qcd/utils/tf_helpers.py
+% l2hmc-qcd/utils/tf_logging.py
+% l2hmc-qcd/utils/parse_args.py
+% }}}
+
+% \UseRawInputEncoding
+
+
+\clearpage
+\subsection{l2hmc-qcd/gauge\_model\_main.py}
+\lstset{style=mypython}
+% \inputpython{{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/gauge_model_main.py}}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/gauge_model_main.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/models/gauge\_model.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/models/gauge_model.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/dynamics/gauge\_dynamics.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/dynamics/gauge_dynamics.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/lattice/lattice.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/lattice/lattice.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/network/conv\_net.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/trainers/gauge\_model\_trainer.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/trainers/gauge_model_trainer.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/runners/gauge\_model\_runner.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/runners/gauge_model_runner.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/loggers/run\_logger.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/run_logger.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/loggers/train\_logger.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/train_logger.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/plotters/gauge\_model\_plotter.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/gauge_model_plotter.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/plotters/leapfrog\_plotters.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/leapfrog_plotters.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/utils/parse\_args.py}
+% \lstset{style=custompython}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/parse_args.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/utils/file\_io.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/file_io.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/utils/tf\_logging.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/tf_logging.py}
+% }
+
+\clearpage
+\subsection{l2hmc-qcd/utils/data\_loader.py}
+% {\setstretch{1.0}
+\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/data_loader.py}
+% }
+
+% }}}
+
+\end{document}

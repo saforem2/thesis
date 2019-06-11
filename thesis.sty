@@ -1,0 +1,535 @@
+\ProvidesPackage{thesis}
+%%%%%% start: define some names here %%%%%%
+\newcommand{\longvertspacing}{~\\~\\~\\~\\~\\~\\}
+\newcommand{\bigvertspace}{\vspace*{6\baselineskip}}
+\newcommand{\mylinespacing}{\vspace{1em}}
+\newcommand{\myoptpg}{\textbf{THIS PAGE IS OPTIONAL}}
+\newcommand{\mytitle}{LEARNING BETTER PHYSICS:\protect\\ A MACHINE LEARNING APPROACH TO LATTICE GAUGE THEORY} % use all capital letters
+\newcommand{\myname}{Samuel Alfred Foreman}
+\newcommand{\mydegree}{\capitalize{Doctor of Philosophy}}
+\newcommand{\myprogram}{\capitalize{Physics}}
+\newcommand{\mymonth}{August}
+\newcommand{\myyear}{2019}
+\newcommand{\myadvisor}{Professor Yannick Meurice}
+\newcommand{\memberOne}{Yannick Meurice}
+\newcommand{\memberTwo}{James Osborn}
+\newcommand{\memberThree}{Vincent Rodgers}
+\newcommand{\memberFour}{Wayne Polyzou}
+\newcommand{\memberFive}{Craig Kletzing}
+% \def\memberOne{\gdef\@memberOne}
+% \def\memberTwo{\gdef\@memberTwo}
+% \def\memberThree{\gdef\@memberThree}
+% \def\memberFour{\gdef\@memberFour}
+% \def\memberFive{\gdef\@memberFive}
+%%%%%% start: define some names here %%%%%%
+
+\RequirePackage{ifthen} 
+% \newboolean{phd}
+\DeclareOption{phd}{\setboolean{phd}{true}}
+\DeclareOption{multipleSupervisors}{\setboolean{multipleSupervisors}{false}}
+\ProcessOptions%
+
+% fonts {{{
+% \renewcommand{\rmdefault}{ptm}
+% \renewcommand{\sfdefault}{phv}
+% }}}
+
+\usepackage{subfigure}
+
+\usepackage{subfiles}
+\usepackage{geometry}
+ \geometry{
+ letterpaper,
+ left=2.54cm,
+ right=2.54cm,
+ bottom=2.54cm,
+ top=2.54cm,
+ }
+\usepackage[utf8]{inputenc}
+
+%% ref related
+\usepackage{varioref}
+% \usepackage[linktocpage=true]{hyperref}
+%% toc
+\usepackage[T1]{fontenc}
+% \usepackage{charter}
+% \usepackage[expert]{mathdesign}
+% \usepackage{upgreek}
+% \usepackage[bitstream-charter]{mathdesign}
+% \DeclareMathVersion{mathchartertext}
+% \SetSymbolFont{letters}{mathchartertext}{OML}{mdbch}{m}{n}
+% % The \gchar{\char} can be used in text to type
+% % Charter non-italic Greek characters.
+% \newcommand{\gchar}[1]{\mathversion{mathchartertext}$#1$\mathversion{normal}}
+\usepackage[subfigure]{tocloft}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[ruled, vlined]{algorithm2e}
+\usepackage[normalem]{ulem}
+\usepackage{graphicx}
+\setcounter{secnumdepth}{4}
+% \usepackage{minted}
+% textcomp fixes undefined control sequence errors with listings
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage[scaled]{beramono}
+% \renewcommand*\familydefault{ttdefault}
+\usepackage{lineno}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{silence}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{bm}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{mathdots}
+\usepackage{yhmath}
+\usepackage{cancel}
+\usepackage{color}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usetikzlibrary{fadings}
+\usepackage[pdftex,unicode,linktocpage=true]{hyperref}
+\hypersetup{
+  colorlinks  = true,
+  urlcolor    = magenta,
+  linkcolor   = red,
+  citecolor   = blue,
+}
+\usepackage[capitalise,noabbrev]{cleveref}
+%%% dots: https://tex.stackexchange.com/questions/53898/how-to-get-lines-with-dots-in-the-table-of-contents-for-sections
+\newcommand{\hbAppendixPrefix}{A}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftfigleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cfttableader}{\cftdotfill{\cftdotsep}}
+%%% adjust sectional unit title fonts in toc
+\renewcommand{\cftsecfont}{\normalfont\MakeUppercase} 
+\renewcommand{\cftsubsecfont}{\normalfont}%\capitalize}
+\renewcommand{\cftsubsubsecfont}{\normalfont}%\capitalize}
+%%% use figure/table.num for the lot and lof
+%\renewcommand{\cftfigfont}{Figure~\alph{fig}.}
+%% source: https://tex.stackexchange.com/questions/419103/how-to-change-the-numbering-style-in-list-of-table-and-list-of-figures
+\renewcommand{\cftfigpresnum}{Figure }
+\renewcommand{\cftfigaftersnum}{:}
+\renewcommand{\cfttabpresnum}{Table }
+\renewcommand{\cfttabaftersnum}{:}
+\newlength{\mylen}
+\settowidth{\mylen}{\cftfigpresnum\cftfigaftersnum}
+\addtolength{\cftfignumwidth}{\mylen}
+%%% increase spacing between entries in toc
+\setlength{\cftparskip}{2ex}
+%%% decrease spacing between number and title as well as indent
+% \setlength{\cftfignumwidth}{9ex}
+% \setlength{\cfttabnumwidth}{8ex}
+% \setlength{\cftfigindent}{0ex}
+% \setlength{\cfttabindent}{0ex}
+%%% title names
+%%% center uppercase toc titles
+%% https://tex.stackexchange.com/a/255699/154200
+\renewcommand{\cfttoctitlefont}{\hspace*{\fill}\bfseries\Large\MakeUppercase}
+\renewcommand{\cftaftertoctitle}{\hspace*{\fill}}
+\renewcommand{\contentsname}{Table of Contents}
+\renewcommand{\cftlottitlefont}{\bfseries\hfill\Largenormalsize\MakeUppercase}
+\renewcommand{\cftafterlottitle}{\hfill}
+\renewcommand{\cftloftitlefont}{\bfseries\hfill\Large\MakeUppercase}
+\renewcommand{\cftafterloftitle}{\hfill}
+%% this package binds all indices to toc
+\usepackage{tocbibind}
+%%% remove toc numbering
+% \makeatletter
+% \let\latexl@section\l@section
+% \def\l@section#1#2{\begingroup\let\numberline\@gobble\latexl@section{#1}{#2}\endgroup}
+% \let\latexl@subsection\l@subsection
+% \def\l@subsection#1#2{\begingroup\let\numberline\@gobble\latexl@subsection{#1}{#2}\endgroup}
+% \makeatother
+%% set figure path
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+%% captions
+\usepackage{boxhandler}
+%\usepackage{caption}
+%\captionsetup{labelsep=space,justification=justified,singlelinecheck=off}
+%% appendix
+\usepackage[toc,page]{appendix}
+%% biblatex
+% \usepackage[backend=biber,style=phys,autocite=plain,citestyle=numeric-comp,sorting=none]{biblatex}
+\usepackage[%
+  style=phys,%
+  articletitle=false,biblabel=brackets,%
+  chaptertitle=false,pageranges=false%
+]{biblatex}
+\addbibresource{centralmacbib1.bib}
+\addbibresource{centralmacbib2.bib}
+\addbibresource{centralmacbib3.bib}
+\addbibresource{centralmacbib4.bib}
+
+% \DeclareLanguageMapping{american}{american-apa}
+% \addbibresource{main.bib}
+% \bibliographystyle{ieeetr}
+% \bibliog
+% % \addbibresource{l2hmc_paper/l2hmc_writeupNotes.bib}
+% \addbibresource{ising_worm_paper/preising.bib}
+% \addbibresource{ising_worm_paper/preisingNotes.bib}
+% \addbibresource{l2hmc.bib}
+% \addbibresource{preising.bib}
+% \addbibresource{machinelearning.bib}
+% \addbibresource{ref.bib}
+%% uses times font
+% \usepackage{mathptmx}
+%% set fontsize
+% \fontsize{12}{1} \selectfont
+%% set line spacing
+\usepackage{setspace}
+\singlespacing%
+% \UseRawInputEncoding%
+%% set par indent
+%\usepackage{indentfirst}
+\setlength{\parindent}{6.5ex}
+
+% Temporarily use sans-serif font {{{
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+% }}}
+
+%% customize heading styles
+% {\normalfont\fontsize{20.74}{19}\sffamily\bfseries}
+\definecolor{gray75}{gray}{0.75}
+\newcommand{\hsp}{\hspace{20pt}}
+\usepackage[indentafter]{titlesec}
+\titleformat{\chapter}[hang]
+  {\normalfont\Huge\sffamily\bfseries}
+  {\thechapter\hsp\textcolor{gray75}{$|$}\hsp}
+  {0pt}
+  {}
+  % {\MakeUppercase\normalfont\fontsize{20}{19}\sffamily\bfseries}
+
+  % {\normalfont\fontsize{15}{16}\sffamily\bfseries}
+\titleformat{\section}[hang]
+  {\normalfont\Large\sffamily\bfseries}
+  {\thesection}
+  {1em}
+  {}
+
+  % {\normalfont\fontsize{14}{16}\sffamily\bfseries\slshape}%
+\titleformat{\subsection}[hang]
+  {\normalfont\large\sffamily\bfseries\slshape}%
+  {\thesubsection}
+  {1em}
+  {}
+
+  % {\normalfont\large\sffamily\slshape}%
+\titleformat{\subsubsection}[hang]
+  {\normalfont\normalsize\bfseries\sffamily}
+  {\thesubsubsection}
+  {1em}
+  {}
+% \titleformat{\section}[hang]
+%   {\normalsize\bf}
+%   {}
+%   {0pt}
+%   {\MakeUppercase\bfseries}
+%%%% heading 1
+% \titleformat{\section}
+%   {\normalsize\center\bf}
+%   {}
+%   {0pt}
+%   {\MakeUppercase}
+% %%%% heading 2
+% \titleformat{\subsection}
+%   {\normalsize\center\bf}
+%   {}
+%   {0pt}
+%   {\capitalize}
+% %%%% heading 3
+% \titleformat{\subsubsection}
+%   {\normalsize\bf}
+%   {}
+%   {0pt}
+%   {\capitalize}
+%\titleformat{⟨command⟩}[⟨shape⟩]{⟨format⟩}{⟨label⟩}{⟨sep⟩}{⟨before-code⟩}[⟨after-code⟩] 
+
+%----------------------------------------------------------------------------------------------
+% Settings for source_code/appendix_code.tex{{{
+
+% Custom colors
+% \usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+% \definecolor{codeblue}{RGB}{93,173,226}
+\definecolor{codeblue}{RGB}{52,152,219}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{darkgray}{rgb}{0.278,0.278,0.278}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+% \definecolor{codered}{RGB}{236,112,99}
+\definecolor{codered}{RGB}{231,76,60}
+\definecolor{codeorange}{RGB}{248,196,113}
+% \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+% \DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+ 
+\lstdefinestyle{custompython}{%
+    % backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{darkgray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    formfeed=\newpage,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=t,                    
+    keepspaces=true,                 
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,                
+    showstringspaces=false,
+    % morekeywords={models, lambda, self}, %, __init__, NOTE, Args, Returns}
+    morekeywords={lambda}, %, __init__, NOTE, Args, Returns}
+    % linewidth=79pt,
+    xleftmargin=-20pt,
+    xrightmargin=-20pt,
+    showtabs=false,                  
+    % captionpos=t,
+    title=\lstname,
+    tabsize=4
+}
+
+\lstdefinestyle{markdown}{%
+    % backgroundcolor=\color{backcolour},
+    % commentstyle=\color{codegreen}\itshape,
+    % keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{darkgray},
+    % stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    formfeed=\newpage,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=t,                    
+    keepspaces=true,                 
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,                
+    showstringspaces=false,
+    % morekeywords={models, lambda, self}
+    % linewidth=79pt,
+    xleftmargin=-20pt,
+    xrightmargin=-20pt,
+    showtabs=false,                  
+    % captionpos=t,
+    title=\lstname,
+    tabsize=4
+}
+
+\lstset{%
+  basicstyle=\ttm,
+  keywordstyle=\ttb\color{deepblue},
+  emphstyle=\ttb\color{deepred},
+  frame=tb,
+  showstringspaces=false
+}
+% }}}
+%----------------------------------------------------------------------------------------------
+
+
+%% a new center environment {{{
+\newenvironment{tightcenter}{%
+  \setlength\topsep{0pt}
+  \setlength\parskip{0pt}
+  \begin{center}
+}{%
+  \end{center}
+}
+% }}}
+
+%% adjust quotation environment margin {{{
+\renewenvironment{quote}{%
+   \list{}{%
+     \leftmargin0cm   % this is the adjusting screw
+     \rightmargin\leftmargin%
+   }
+   \item\relax
+}
+{\endlist}
+% }}}
+
+% capitalization settings {{{
+%%%%%% capitalize from stackexchange %%%%%% 
+\usepackage{ifxetex}
+
+\usepackage{xparse}
+
+\ExplSyntaxOn
+\NewDocumentCommand{\capitalize}{>{\SplitList{~}}m}
+ {
+  \seq_clear:N \l_capitalize_words_seq
+  \ProcessList{#1}{\CapitalizeFirst}
+  \seq_use:Nn \l_capitalize_words_seq { ~ }
+ }
+\NewDocumentCommand{\CapitalizeFirst}{m}
+ {
+  \capitalize_word:n { #1 }
+ }
+
+\sys_if_engine_pdftex:TF
+ {
+  \cs_set_eq:Nc \capitalize_tl_set:Nn { protected@edef }
+ }
+ {
+  \cs_set_eq:NN \capitalize_tl_set:Nn \tl_set:Nn
+ }
+
+\cs_new_protected:Nn \capitalize_word:n
+ {
+  \capitalize_tl_set:Nn \l_capitalize_word_tl { #1 }
+  \seq_if_in:NfTF \g_capitalize_exceptions_seq { \tl_to_str:n { #1 } }
+   % exception word
+   { \seq_put_right:Nn \l_capitalize_words_seq { #1 } } % exception word
+   % to be uppercased
+   { \seq_put_right:Nx \l_capitalize_words_seq { \tl_mixed_case:V \l_capitalize_word_tl } }
+ }
+\cs_generate_variant:Nn \tl_mixed_case:n { V }
+\NewDocumentCommand{\AppendToList}{m}
+ {
+  \clist_map_inline:nn { #1 }
+   {
+    \seq_gput_right:Nx \g_capitalize_exceptions_seq { \tl_to_str:n { ##1 } }
+   }
+ }
+\cs_generate_variant:Nn \seq_if_in:NnTF { Nf }
+\seq_new:N \l_capitalize_words_seq
+\seq_new:N \g_capitalize_exceptions_seq
+\ExplSyntaxOff
+
+% }}}
+
+\AppendToList{a,is,of,óf}
+%%%%%% capitalize from stackexchange %%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+% new margin settings {{{
+%
+% new margin settings, june 2002, mike mclendon
+% i made these changes because of changes made
+% to the graduate college's thesis handbook
+%
+% Top margin
+\newlength{\uittmarg}\setlength{\uittmarg}{1.0in}
+% Left margin
+\newlength{\uitlmarg}\setlength{\uitlmarg}{1.0in}
+% Right margin
+\newlength{\uitrmarg}\setlength{\uitrmarg}{1.0in}
+% Bottom margin
+\newlength{\uitbmarg}\setlength{\uitbmarg}{1.0in}
+% Distance from bottom of page to preliminary page nums
+\newlength{\uitppage}\setlength{\uitppage}{0.5in}
+% Distance of normal page number from the top
+\newlength{\uittpage}\setlength{\uittpage}{0.5in}
+% Distance of normalpage number from the right
+\newlength{\uitrpage}\setlength{\uitrpage}{1in}
+% Distance from top of page to chapter title
+\newlength{\uitchap}\setlength{\uitchap}{1in}
+
+
+% Don't play with these lengths!
+\newlength{\li}\setlength{\li}{14.48pt}
+\setlength{\hoffset}{-1in}
+\setlength{\voffset}{-1in}
+
+\setlength{\topmargin}{\uittpage}
+\setlength{\headheight}{12pt}
+\setlength{\headsep}{\uittmarg}
+\addtolength{\headsep}{-\topmargin}
+\addtolength{\headsep}{-\headheight}
+
+\setlength{\oddsidemargin}{\uitlmarg}
+\setlength{\textwidth}{\paperwidth}
+\addtolength{\textwidth}{-\uitlmarg}
+\addtolength{\textwidth}{-\uitrmarg}
+\setlength{\textheight}{\paperheight}
+\addtolength{\textheight}{-\uittmarg}
+\addtolength{\textheight}{-\uitbmarg}
+\addtolength{\textheight}{-\li}
+
+\setlength{\footskip}{\uitbmarg}
+\addtolength{\footskip}{-\uitppage}
+\addtolength{\footskip}{\li}
+
+
+% \newlength{\uitchapadd}\setlength{\uitchapadd}{\uitchap}
+% \addtolength{\uitchapadd}{-\uittmarg}
+% \addtolength{\uitchapadd}{-\li}
+%
+% \setlength{\parindent}{0.5in}
+
+\newlength{\uitrule}
+% }}}
+
+% signature page {{{
+%
+% SIGNATURE PAGE --
+%
+% ADDITION by SLF
+% \def\@author{Samuel Alfred Foreman}
+% END of addition
+% \def\memberSix{\gdef\@memberSix}	% by Duckki
+%
+\newcommand{\signaturepg}{%
+   \thispagestyle{empty}%
+   \begin{center}
+      Graduate College\\
+      The University of Iowa\\
+      Iowa City, Iowa
+   \end{center}
+   \vspace*{\stretch{2}}
+   \begin{center}
+      CERTIFICATE OF APPROVAL\\[\li]
+      \settowidth{\uitrule}{CERTIFICATE OF APPROVAL}
+      \rule{\uitrule}{0.4pt}\\[2\li]
+      % \ifthenelse{\boolean{phd}}%
+      {PH.D. THESIS\settowidth{\uitrule}{PH.D. THESIS}}\\[\li]
+         % {MASTER'S THESIS\settowidth{\uitrule}{MASTER'S THESIS}}\\[\li]
+      \rule{\uitrule}{0.4pt}
+   \end{center}
+   \vspace*{\stretch{1}}
+   \begin{center}\begin{minipage}{4.5in}
+      \noindent This is to certify that the {Ph.D.} thesis of
+      \vspace*{\li}
+      \begin{center}{\myname}\end{center}
+      \vspace*{\li}
+      has been approved by the Examining Committee for the thesis
+      requirement for the Doctor of Philosophy degree in {\myprogram} at the
+      {\mymonth} {\myyear} graduation.
+   \end{minipage}\end{center}
+   \vspace*{\stretch{1}}
+   \begin{center}\begin{minipage}{4.5in}
+   \settowidth{\uitrule}{Thesis Committee: }
+   \raisebox{2pt}{Thesis Committee: }\hrulefill\\
+       \hspace*{\uitrule}{\memberOne, Thesis Supervisor}\\[2\li]
+       \hspace*{\uitrule}\hrulefill\\
+       \hspace*{\uitrule}{\memberTwo}\\[2\li]
+       \hspace*{\uitrule}\hrulefill\\
+       \hspace*{\uitrule}{\memberThree}\\[2\li]
+       \hspace*{\uitrule}\hrulefill\\
+       \hspace*{\uitrule}{\memberFour}\\[2\li]
+       \hspace*{\uitrule}\hrulefill\\
+       \hspace*{\uitrule}{\memberFive}
+   \end{minipage}\end{center}
+   \vfill
+   \newpage
+ }
+
+% fonts {{{
+% \renewcommand{\rmdefault}{ptm}
+% \renewcommand{\sfdefault}{phv}
+% }}}
+

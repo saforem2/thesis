@@ -1,0 +1,107 @@
+%% Creator: Inkscape inkscape 0.92.2, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'flowchart.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{6730.51803813bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.11341722)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{flowchart.pdf}}%
+    \put(0.03846877,0.08110521){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{flowchart.pdf}}%
+    \put(0.03846877,0.07842038){\color[rgb]{0.81568627,0.00784314,0.10588235}\makebox(0,0)[lb]{\smash{Input}}}%
+    \put(0.0421861,0.07842038){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{flowchart.pdf}}%
+    \put(0.06841545,0.06989142){\color[rgb]{0.81568627,0.00784314,0.10588235}\makebox(0,0)[lb]{\smash{Input}}}%
+    \put(0.07213278,0.06989142){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{flowchart.pdf}}%
+    \put(0.06841545,0.06733021){\color[rgb]{0.29019608,0.56470588,0.88627451}\makebox(0,0)[lb]{\smash{Output}}}%
+    \put(0.07343166,0.06733021){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{:  }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{flowchart.pdf}}%
+    \put(0.00230189,0.06981743){\color[rgb]{0.81568627,0.00784314,0.10588235}\makebox(0,0)[lb]{\smash{Input}}}%
+    \put(0.00601921,0.06981743){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{flowchart.pdf}}%
+    \put(0.00230189,0.06703161){\color[rgb]{0.29019608,0.56470588,0.88627451}\makebox(0,0)[lb]{\smash{Output}}}%
+    \put(0.0073181,0.06703161){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{flowchart.pdf}}%
+    \put(0.03550884,0.06992886){\color[rgb]{0.81568627,0.00784314,0.10588235}\makebox(0,0)[lb]{\smash{Input}}}%
+    \put(0.03922617,0.06992886){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{flowchart.pdf}}%
+    \put(0.03550884,0.06714304){\color[rgb]{0.29019608,0.56470588,0.88627451}\makebox(0,0)[lb]{\smash{Output}}}%
+    \put(0.04052506,0.06714304){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{flowchart.pdf}}%
+    \put(0.03281704,0.05521364){\color[rgb]{0.81568627,0.00784314,0.10588235}\makebox(0,0)[lb]{\smash{Input}}}%
+    \put(0.03653437,0.05521364){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{flowchart.pdf}}%
+    \put(0.03281704,0.05223978){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{flowchart.pdf}}%
+    \put(0.03281704,0.04898908){\color[rgb]{0.29019608,0.56470588,0.88627451}\makebox(0,0)[lb]{\smash{Output}}}%
+    \put(0.03783326,0.04898908){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{flowchart.pdf}}%
+    \put(0.06229013,0.04431065){\color[rgb]{0.81568627,0.00784314,0.10588235}\makebox(0,0)[lb]{\smash{Input}}}%
+    \put(0.06600746,0.04431065){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{flowchart.pdf}}%
+    \put(0.06229013,0.04180515){\color[rgb]{0.29019608,0.56470588,0.88627451}\makebox(0,0)[lb]{\smash{Output}}}%
+    \put(0.06730635,0.04180515){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0.06229013,0.03916559){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{flowchart.pdf}}%
+    \put(0.00381407,0.0441435){\color[rgb]{0.81568627,0.00784314,0.10588235}\makebox(0,0)[lb]{\smash{Input}}}%
+    \put(0.00753139,0.0441435){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{flowchart.pdf}}%
+    \put(0.00381407,0.041638){\color[rgb]{0.29019608,0.56470588,0.88627451}\makebox(0,0)[lb]{\smash{Output}}}%
+    \put(0.00883028,0.041638){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{flowchart.pdf}}%
+    \put(0.03317485,0.03508437){\color[rgb]{0.81568627,0.00784314,0.10588235}\makebox(0,0)[lb]{\smash{Input}}}%
+    \put(0.03689217,0.03508437){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{: }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{flowchart.pdf}}%
+    \put(0.03317485,0.0315429){\color[rgb]{0.29019608,0.56470588,0.88627451}\makebox(0,0)[lb]{\smash{Output}}}%
+    \put(0.03819106,0.0315429){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{:  }}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{flowchart.pdf}}%
+    \put(0.03898937,0.02193095){\color[rgb]{0.29019608,0.56470588,0.88627451}\makebox(0,0)[lb]{\smash{Output:}}}%
+    \put(0.0326203,0.05208569){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Calculate:}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{flowchart.pdf}}%
+  \end{picture}%
+\endgroup%

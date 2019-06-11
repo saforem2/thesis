@@ -1,0 +1,51 @@
+\makeatletter
+\def\input@path{{../}}
+\makeatother
+\documentclass[../main.tex]{subfiles}
+
+
+\begin{document}
+This thesis is primarily composed of the work completed during my graduate career and includes some relevant background
+information that may be useful for those looking to learn more information about how ideas from machine learning can be
+applied to problems in lattice gauge theory and lattice quantum chromodynamics (QCD).
+%
+In particular, Chapter~\ref{chap:machine_learning} provides a thorough background on many of the machine learning tools
+used throughout the remainder of the thesis and provides concrete examples on their use.
+%
+For example, topics such as such as supervised learning, gradient descent / backpropagation, feed-forward and
+convolutional neural networks are covered.
+
+Chapter~\ref{chap:unsupervised_learning} covers an example of how unsupervised learning (specifically, principal
+component analysis) can be applied to extract information about the phase transition of the two-dimensional Ising
+model.
+%
+By representing equilibrium configurations of the system as two-dimensional greyscale images, principal component
+analysis allows us to obtain a direct relationship between the specific heat capacity and the eigenvalue of the
+dominant principal component.
+%
+In Sec.~\ref{sec:trg} and Sec.~\ref{sec:rgimages}, a renormalization group transformation is proposed that can be
+applied to generic sets of images, which when applied to the images under consideration, leads to a finite-size scaling
+analysis of the critical point.
+
+Chapter~\ref{chap:semi_supervised_learning} describes a new technique for applying supervised learning to help improve
+the efficiency of Hamiltonian / Hybrid Monte Carlo (HMC) simulations.
+%
+This new approach is called `Learning to Hamiltonian Monte Carlo' (L2HMC), and is based off of the work described
+in~\cite{2017arXiv171109268L}.
+%
+In Sec.~\ref{sec:l2hmc_mcmc}, a brief overview of Markov Chain Monte Carlo (MCMC) methods in general is discussed, and
+the relevant notation used for the remainder of the chapter is introduced.
+%
+Sec.~\ref{sec:l2hmc_hmc} discusses some of the current problems faced with HMC, particularly within the context of
+simulations in lattice gauge theory and lattice QCD.
+%
+The details of the L2HMC algorithm are described in Sec~\ref{sec:l2hmc_l2hmc}, and an example of this algorithm applied
+to a two-dimensional Gaussian Mixture Model is included in Sec.~\ref{sec:l2hmc_gmm}.
+%
+Building on these results, we proceed to look at applying this approach to a two-dimensional $U(1)$ lattice gauge
+theory, the details of which are laid-out in Sec.~\ref{sec:l2hmc_u1}.
+%
+Finally, in Sec.~\ref{subsec:l2hmc_modified_network}-~\ref{subsec:l2hmc_modifiedloss} we discuss some
+of the modifications that were introduced when applying this approach to the gauge model under consideration, and
+provide insight into why these modifications were both necessary and advantageous.
+\end{document}
