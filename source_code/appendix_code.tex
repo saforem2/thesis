@@ -1,3 +1,8 @@
+\makeatletter
+\def\input@path{{../}}
+\makeatother
+\documentclass[../main.tex]{subfiles}
+
 \UseRawInputEncoding%
 % % \newcommand{\hbAppendixPrefix}{A}
 % % \makeatletter
@@ -60,33 +65,71 @@
 % % Default fixed font does not support bold face
 % % \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
 % % \DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% \setminted[
+% frame=lines,
+% framesep=2mm,
+% baselinestretch=1.2,
+% fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+% mathescape=true,
+% python3=true,
+% fontsize=\footnotesize,
+% linenos,
+% texcomments=true
+% ]
+
+\usemintedstyle{monokai}
+%
+% \newenvironment{markdown}%
+%     {\VerbatimEnvironment\begin{VerbatimOut}{tmp.markdown}}%
+%     {\end{VerbatimOut}%
+%         \immediate\write18{pandoc tmp.markdown -t latex -o tmp.tex}%
+%         \input{tmp.tex}}
+
  
 \begin{document}
+% \begin{appendix}
 % \clearpage
 
 % \section{APPENDIX \hbAppendixPrefix: l2hmc-qcd}
 % \section{APPENDIX \hbAppendixPrefix: Test for appendix}
-\section{APPENDIX \hbAppendixPrefix: l2hmc-qcd}
+% \section{APPENDIX \hbAppendixPrefix: l2hmc-qcd}
+% \section{Source code: l2hmc-qcd}
 Included below is the source code used for building, training, running and analyzing the L2HMC algorithm on the $2D\,\,
-U(1)$ lattice gauge theory model. This code is also publicly hosted at \url{https://github.com/saforem2/l2hmc-qcd}
-
-\lstset{%
-  basicstyle=\ttm,
-  keywordstyle=\ttb\color{deepblue},
-  emphstyle=\ttb\color{deepred},
-  frame=tb,
-  showstringspaces=false
+U(1)$ lattice gauge theory model. This code is also publicly hosted at \href{%
+  https://github.com/saforem2/l2hmc-qcd}{%
+  https://github.com/saforem2/l2hmc-qcd
 }
 
-\subsection{README.md}
-\lstset{style=markdown}
-\lstinputlisting{/Users/saforem2/ANL/l2hmc-qcd/README.md}
+% \lstset{%
+%   basicstyle=\ttm,
+%   keywordstyle=\ttb\color{deepblue},
+%   emphstyle=\ttb\color{deepred},
+%   frame=tb,
+%   showstringspaces=false
+% }
+
+\section{README.md}
+% \lstset{style=markdown}
+% \immediate\write18{pandoc /Users/saforem2/ANL/l2hmc-qcd/README.md -t latex -o tmp.tex}%
+\input{tmp.tex}
+  % \lstinputlisting{/Users/saforem2/ANL/l2hmc-qcd/README.md}
 
 \clearpage
-\subsection{l2hmc-qcd/args/gauge\_model\_args.txt}
+\section{l2hmc-qcd/args/gauge\_model\_args.txt}
 % \lstset{style=markdown}
-\lstinputlisting{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/args/gauge_model_args.txt}
-
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{text}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/args/gauge_model_args.txt}
+% \lstinputlisting{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/args/gauge_model_args.txt}
 % \lstset{%
 %   language=Python,
 %   basicstyle=\ttm,
@@ -121,100 +164,263 @@ U(1)$ lattice gauge theory model. This code is also publicly hosted at \url{http
 
 % \UseRawInputEncoding
 
+\clearpage
+\section{l2hmc-qcd/gauge\_model\_main.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]
+{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/gauge_model_main.py}
+% \lstset{style=mypython}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/gauge_model_main.py}
 
 \clearpage
-\subsection{l2hmc-qcd/gauge\_model\_main.py}
-\lstset{style=mypython}
-% \inputpython{{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/gauge_model_main.py}}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/gauge_model_main.py}
-% }
+\section{l2hmc-qcd/models/gauge\_model.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/models/gauge_model.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/models/gauge_model.py}
 
 \clearpage
-\subsection{l2hmc-qcd/models/gauge\_model.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/models/gauge_model.py}
-% }
+\section{l2hmc-qcd/dynamics/gauge\_dynamics.py}
+% \lstinputlisting[language=python]{/users/saforem2/anl/l2hmc-qcd/l2hmc-qcd/dynamics/gauge_dynamics.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/anl/l2hmc-qcd/l2hmc-qcd/dynamics/gauge_dynamics.py}
 
 \clearpage
-\subsection{l2hmc-qcd/dynamics/gauge\_dynamics.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/dynamics/gauge_dynamics.py}
-% }
+\section{l2hmc-qcd/lattice/lattice.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/lattice/lattice.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/lattice/lattice.py}
 
 \clearpage
-\subsection{l2hmc-qcd/lattice/lattice.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/lattice/lattice.py}
-% }
+\section{l2hmc-qcd/network/conv\_net3d.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net3d.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net3d.py}
 
 \clearpage
-\subsection{l2hmc-qcd/network/conv\_net.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net.py}
-% }
+\section{l2hmc-qcd/network/conv\_net2d.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net2d.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net2d.py}
 
 \clearpage
-\subsection{l2hmc-qcd/trainers/gauge\_model\_trainer.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/trainers/gauge_model_trainer.py}
-% }
+\section{l2hmc-qcd/network/generic\_net.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/generic_net.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/generic_net.py}
 
 \clearpage
-\subsection{l2hmc-qcd/runners/gauge\_model\_runner.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/runners/gauge_model_runner.py}
-% }
+\section{l2hmc-qcd/trainers/gauge\_model\_trainer.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/trainers/gauge_model_trainer.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/trainers/gauge_model_trainer.py}
 
 \clearpage
-\subsection{l2hmc-qcd/loggers/run\_logger.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/run_logger.py}
-% }
+\section{l2hmc-qcd/runners/gauge\_model\_runner.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/runners/gauge_model_runner.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/runners/gauge_model_runner.py}
 
 \clearpage
-\subsection{l2hmc-qcd/loggers/train\_logger.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/train_logger.py}
-% }
+\section{l2hmc-qcd/loggers/run\_logger.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/run_logger.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/run_logger.py}
 
 \clearpage
-\subsection{l2hmc-qcd/plotters/gauge\_model\_plotter.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/gauge_model_plotter.py}
-% }
+\section{l2hmc-qcd/loggers/train\_logger.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/train_logger.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/train_logger.py}
 
 \clearpage
-\subsection{l2hmc-qcd/plotters/leapfrog\_plotters.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/leapfrog_plotters.py}
-% }
+\section{l2hmc-qcd/plotters/gauge\_model\_plotter.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/gauge_model_plotter.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/gauge_model_plotter.py}
 
 \clearpage
-\subsection{l2hmc-qcd/utils/parse\_args.py}
-% \lstset{style=custompython}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/parse_args.py}
-% }
+\section{l2hmc-qcd/plotters/leapfrog\_plotters.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/leapfrog_plotters.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/leapfrog_plotters.py}
 
 \clearpage
-\subsection{l2hmc-qcd/utils/file\_io.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/file_io.py}
-% }
+\section{l2hmc-qcd/utils/parse\_args.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/parse_args.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/parse_args.py}
 
 \clearpage
-\subsection{l2hmc-qcd/utils/tf\_logging.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/tf_logging.py}
-% }
+\section{l2hmc-qcd/utils/file\_io.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/file_io.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/file_io.py}
 
 \clearpage
-\subsection{l2hmc-qcd/utils/data\_loader.py}
-% {\setstretch{1.0}
-\lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/data_loader.py}
-% }
+\section{l2hmc-qcd/utils/tf\_logging.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/tf_logging.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/tf_logging.py}
+
+\clearpage
+\section{l2hmc-qcd/utils/data\_loader.py}
+% \lstinputlisting[language=python]{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/data_loader.py}
+\inputminted[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontfamily=\ttfamily, %\footnotesize\setstretch{0.9}
+mathescape=true,
+python3=true,
+fontsize=\footnotesize,
+linenos,
+texcomments=true
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/data_loader.py}
 
 % }}}
-
+% \end{appendix}
 \end{document}

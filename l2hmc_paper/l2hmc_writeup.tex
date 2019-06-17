@@ -1,397 +1,56 @@
 \makeatletter
-\def\input@path{{../}}
+%\def\input@path{{../}}
 \makeatother
-\documentclass[../main.tex]{subfiles}
+\documentclass[main.tex]{subfiles}
 
 \newcommand{\lfop}{\mathbf{L}_{\theta}}
 
 \begin{document}
 \section{Introduction}%
 \label{sec:l2hmc_intro}
-We describe a new technique for performing Hamiltonian Monte-Carlo (HMC) simulations called: `Learning to Hamiltonian
-Monte Carlo' (L2HMC)~\cite{2017arXiv171109268L} which expands upon the traditional HMC by using an alternative leapfrog
-integrator that is parameterized by weights in a neural network.
 %
-We look at applying this technique to a two-dimensional Gaussian Mixture Model and a two-dimensional $U(1)$ lattice
-gauge theory, and compare our results against those obtained with traditional HMC. %chktex:13
+We describe a new technique for performing Hamiltonian Monte-Carlo (HMC) simulations called: `Learning to Hamiltonian
+Monte Carlo' (L2HMC)~\cite{2017arXiv171109268L} which expands upon the traditional HMC by using a generalized version
+of the leapfrog integrator that is parameterized by weights in a neural network.
+%
+In order to demonstrate the usefulness of this new approach, we use various metrics for measuring the performance of
+the trained (L2HMC) sampler vs.\ the generic HMC sampler.
+% how the trained (L2HMC) sampler performs
+% compared to the generic HMC sampler.
+%
+First, we will look at applying this algorithm to a two-dimensional Gaussian Mixture Model (GMM).
+%
+The GMM is a notoriously difficult distribution for HMC due to the vanishingly small likelihood of the leapfrog
+integrator traversing the space between the two modes.
+%
+Conversely, we see that through the use of a carefully chosen training procedure, the trained L2HMC sampler is able to
+successfully discover the existence of both modes, and mixes (`tunnels') between the two with ease. 
+% that for MCMC where it is observed that
+% the trained sampler is able to successfully mix (`tunnel') between modes, while tthe HMC sampler is u
+%
+Additionally, we will observe that the trained L2HMC sampler mixes much faster than the generic HMC sampler, as
+evidenced through their respective autocorrelation spectra.
+%
+This ability to reduce autocorrelations is an important metric for measuring the efficiency of a general MCMC
+algorithm, and is of great importance for simulations in lattice gauge theory and lattice QCD.
+%
+Following this, we introduce the two-dimensional $U(1)$ lattice gauge theory and describe important modifications to
+the algorithm that are of particular relevance for lattice models.
+%
+% Additionally, we see that the autocorrelation spectrum of the trained L2HMC sampler is a significant i
+% significantly reduces autocorre
+% We look at applying this technique to a two-dimensional Gaussian Mixture Model and a two-dimensional $U(1)$ lattice
+% gauge theory, and compare our results against those obtained with traditional HMC. %chktex:13
+%
+
 %
 Ongoing issues and potential areas for improvement are also discussed, particularly within the context of
 high-performance computing and long-term goals of the lattice QCD community.
 %
-\section{Markov Chain Monte Carlo (MCMC)}%
-\label{sec:l2hmc_mcmc}
-For consistency with the original paper, we adopt much of the same notation.
-%
-In order to better understand the theory behind the L2HMC algorithm, we begin with a general description of Markov
-Chain Monte Carlo (MCMC) methods.
-%
-\subsection{Markov Chains}
-Generally speaking, MCMC methods are a class of algorithms that use Markov Chains to sample from a particular
-probability distribution that is often too complicated to sample from directly.
-%
-These algorithms are of tremendous importance in a wide variety of fields and are of particular importance for
-simulations in lattice quantum chromodynamics (QCD) and lattice gauge theory.
-%
-A Markov chain can be understood as a sequence of random variables ${\{x_1, x_2, \ldots, x_T\}}$ sampled from a
-conditional probability distribution $p{(x_{t+1}|x_t)}$, with the condition that the next sample $x_{t+1}$ depends only
-on the current state $x_t$ and does not depend on the history of previous states ${\{x_1, x_2, \ldots,
-x_{t-1}\}}$~\cite{brooks2011handbook}.
-%
-The set in which the $x_i$ take values is often referred to as the state space $\mathbb{S}$ of the Markov chain.
-%
-For finite state spaces, the initial distribution can be associated with a vector $\lambda= {(\lambda_1, \ldots,
-\lambda_n)}$ defined by
-%
-\begin{equation}
-  p(x_1 = x_i) = \lambda_i, \quad i = 1, \ldots, n
-\end{equation}
-%
-and the transition probabilities can be associated with a transition matrix (kernel) $K$ with elements $k_{ij}$ given
-by \begin{equation}
-  p(x_{t+1} = x_j | x_t = x_i) = k_{ij}, \quad i = 1, \ldots, n \,\, j = 1, \ldots n
-\end{equation}
-This says that the ${(i, j)}^{\mathrm{th}}$ entry of the $n^{\mathrm{th}}$ power of $K$ gives the probability of
-transitioning from state $i$ to state $j$ in $n$ steps.
-%
-For our purposes, we are usually interested in Markov chains that have stationary transition probabilities, i.e.\ the
-conditional distribution of $x_{t+1}$ given $x_t$ does not depend on $t$. Note that for $i = 1, 2, \ldots, N$,
-\begin{equation}
-  \sum_{j=1}^{N} p_{ij} = 1.
-\end{equation}
-
-There are two main (defining) properties of Markov chains that are relevant for our discussion, namely
-\emph{stationarity} and \emph{reversibility}.
-%
-\begin{itemize}
-  \item \textbf{Stationarity:} A sequence $\{x_1, x_2, \ldots, x_n\}$ of random elements is said to be
-    \emph{stationary} if for every positive integer $k$ the distribution of the $k$-tuple
-    \begin{equation*}
-      (x_{t+1}, \ldots, x_{t+k})
-    \end{equation*}
-    does not depend on $t$. An initial distribution is said to be stationary if the Markov chain specified by the
-    initial distribution and transition probability distribution is stationary. 
-  \item \textbf{Reversibility:} A Markov chain is said to be reversible if its transition probability is reversible
-    with respect to its initial distribution. Note that this is a stronger condition than \emph{stationarity} since if
-    a Markov chain is reversible it is also stationary. This condition can be better understood by noticing that for
-    any $i, k  > 0 \in \mathbb{Z}$, the distributions of $(x_{i+1}, \ldots, x_{i+k})$ and $(x_{i+k}, \ldots x_{i+1})$
-    are the same.
-\end{itemize}
-%
-Additionally, we often desire that our Markov chain is
-\begin{itemize}
-  \item \textbf{Irreducible:} For any state of the Markov chain, there is a positive probability of visiting all other
-    states, i.e.\ any two configurations are connected by a finite number of steps..
-     % For all states $i$, $j$, there exists a $k$ such that ${(T^{k})}_{i,j} \neq 0$.
-  \item \textbf{Aperiodic:} The \emph{period} of a configuration $\{x\}$ is given by the greatest common divisor of
-    possible numbers of steps to come back to itself. When the period is $1$ for all configurations, the Markov chain
-    is said to be aperiodic.
-    % There is a positive probability that the chain remains in the current state, i.e.\ %
-    % $p{(x_t = x_{t-1})} > 0$.
-    % For all states $i$, $j$, $\gcd\{k\,:\,{(T^{k})}_{i, j} > 0\} = 1$.
-\end{itemize}
-If a (finite) chain satisfies both of these properties, it will always have a unique stationary distribution.
-
-%
-% Consequently, an irreducible, aperiodic Markov chain must have a unique distribution $\pi = (\pi_1, \pi_2, \ldots,
-% \pi_N)$ on the state space $\mathbb{S}$ ($\pi_i \equiv$ probability of state $i$) with the property
-% that~\cite{richey2010evolution}
-% \begin{equation}
-%   \pi = \pi T
-% \end{equation}
-% %
-% In which case, we say that $\pi$ is the \emph{stable distribution} of the Markov chain.
-% %
-% Note that because of this, if $\pi$ is the stable distribution for an irreducible, aperiodic Markov chain, then we can
-% use the Markov chain to sample from $\pi$.
-%
-% In particular, to obtain a sample select $s_1 \in \mathbb{S}$ arbitrarily. Then for any $k > 1$, if $s_{k - 1} = i$,
-% select $s_k = j$ with probability $t_{ij}$. The resulting sequence $s_1, s_2, \ldots$ has the useful property that as
-% $N \rightarrow \infty$,
-% \begin{equation}
-%   \frac{|\{k\, :\, k \leq N \,\,\text{and}\,\, s_k = j\}|}{N} \rightarrow \pi_j
-% \end{equation}
-% with probability one.
-%
-\subsection{Metropolis-Hastings algorithm}
-The purpose of the Metropolis-Hastings algorithm is to generate a collection of states according to a desired
-distribution $p(x)$.
-%
-More formally, let $p$ be the target distribution defined up to a constant over a space $\mathcal{X}$.
-%
-We wish to construct a Markov Chain with stationary distribution equal to the target distribution $p$.
-%
-We can obtain samples by simulating a Markov process.
-%
-Given an initial distribution $\pi_0$ and a transition kernel $K$, we construct the following sequence of random
-variables
-%
-\begin{equation}
-  X_0 \sim \pi_0, \quad X_{t+1} \sim K(\cdot|X_t).
-\end{equation}
-%
-As discussed previously, for $p$ to be the stationary distribution of the chain, $K$ must be irreducible and aperiodic,
-and $p$ has to be a \emph{fixed point} of K. Note we can express the fixed point condition as 
-%
-\begin{equation}
-  p(\xp) = \int K(\xp | x) p(x) dx
-\end{equation}
-%
-The stationarity condition is often satisfied by ensuring the (stronger) \emph{detailed balance condition}
-%
-\begin{equation}
-  p{(\xp)} K{(x|\xp)} = p{(x)} K{(\xp|x)}.
-\end{equation}
-%
-Note that we can rewrite the detailed balance condition as 
-%
-\begin{equation}
-  \frac{K{(\xp | x)}}{K(x | \xp)} = \frac{p(\xp)}{p(x)}
-\end{equation}
-%
-Given a proposal distribution $q{(x^{\prime}|x)}$, we can construct a transition kernel satisfying detailed balance
-using Metropolis-Hastings accept/reject rules, as outlined in Alg.~\ref{alg:metropolis_hastings}.
-%
-\begin{algorithm}[htpb]
-  \SetKwProg{Fn}{def}{\string:}{}%
-  \SetKwFunction{Range}{range}%
-  \SetKwFor{For}{for}{\string:}{}%
-  \SetKwIF{If}{ElseIf}{Else}{if}{:}{elif}{else:}{}%
-  \SetKwFor{While}{while}{:}{fintq}%
-  \AlgoDontDisplayBlockMarkers\SetAlgoNoEnd\SetAlgoNoLine%
-  \DontPrintSemicolon%
-  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}%
-  \caption{Metropolis-Hastings Algorithm}%
-  \Input{Transition kernel (proposal distribution), $q(\xp | x)$}\;
-  Initialize $x_0 \sim \pi_0$.\;
-  \For{$t = 0$ \KwTo\ $N$}{%
-    Sample $\xp \sim q(\cdot | x_t)$\;
-    Compute the acceptance probability: 
-    $A(\xp | x_t) = \min\left(1, \frac{p(\xp)q(x_t | \xp)}{p(x_t)q(\xp | x_t)}\right)$\;
-    With probability $A$ accept the proposed value and set $x_{t+1} = \xp$. Otherwise set $x_{t+1} = x$.
-  }%
-\label{alg:metropolis_hastings}
-\end{algorithm}
-%
-In practice, a Gaussian distribution is often used as the proposal distribution, i.e.\ $q(\xp | x) = \mathcal{N}(\xp |
-x, \Sigma)$. In this case the acceptance probability reduces to
-%
-\begin{equation}
-  A(\xp | x) = \min\left(1, \frac{p(\xp)}{p(x)}\right).
-\end{equation}
-%
-This ``random walk'' approach is conceptually simple and can be easily implemented but performs poorly for
-the high-dimensional target distributions commonly encountered in lattice gauge theory and lattice QCD.
-%
-% This is done using a Markov process which asymptotically reaches the unique stationary
-% distribution $pi(x)$ such that $\pi(x) = p(x)$.
-%
-% The joint distribution of the Markov chain is then determined by
-% \begin{itemize}
-%   \item The marginal distribution of $x_0$, called the \emph{initial distribution}.
-%   \item The conditional distribution of $x_{t+1}$ given $x_t$, called the transition probability distribution. (Note
-%     that by assuming stationary transition probabilities, this is independent of $t$).
-% \end{itemize}
-%
-%
-\section{Aside: Bayesian Analysis}
-%
-While not directly relevant to our discussion, it is interesting to note the connection between MCMC and Bayesian
-analysis, which has applications in a wide range of disciplines outside of physics~\cite{mcmc_for_dummies}.
-%
-Recall Bayes' theorem:
-%
-\begin{equation}
-  p(B_{i}|A) = \frac{p(A|B_{i}) p(B_{i})}{\sum_{j} p(A|B_{j}) p(B_{j})}
-  \label{eq:bayes_theorem}
-\end{equation}
-%
-Here, $p(A|B)$ is the conditional probability of $A$ given $B$.
-%
-Suppose $p(A|B_{i})$ and $p(B_{i})$ are given and we want to derive $p(B_{i}|A)$.
-%
-We can identify $B_{j}$ and $p(A|B_{j}) p(B_{j})$ with the value of some field $\phi$, and the path integral weight
-$e^{-S[\phi]}[d\phi]$ respectively.
-%
-The denominator $\sum_{j} p(A|B_{j}) p(B_{j}) = p(A)$ is regarded as the partition function $Z$.
-%
-Then, we can use MCMC to obtain $p(B_{i}|A) \sim \frac{e^{-S[\phi]}[d\phi]}{Z}$ via Bayes' theorem, i.e.\ we can
-collect many samples and see the distribution.
-%
-Moreover, if we know $f(B_{i} \equiv p(C|B_{i})$, we can calculate $p(C|A)$ as
-%
-\begin{equation}
-  p(C|A) = \langle f \rangle.
-\end{equation}
-%
-%
-\section{Hamiltonian Monte Carlo}%
-\label{sec:l2hmc_hmc}
-We can improve upon this random-walk guess and check strategy by ``guiding'' the simulation according to the systems
-natural dynamics using a method known as Hamiltonian (Hybrid) Monte Carlo (HMC).
-%
-In HMC, model samples can be obtained by simulating a physical system governed by a Hamiltonian comprised of kinetic
-and potential energy functions that govern a particles dynamics.
-%
-By transforming the density function to a potential energy function and introducing the auxiliary momentum variable
-$v$, HMC lifts the target distribution onto a joint probability distribution in phase space $(x, v)$, where $x$ is the
-original variable of interest (e.g.\ position in Euclidean space).
-%
-A new state is then obtained by solving the equations of motion for a fixed period of time using a volume-preserving
-integrator (most commonly the \emph{leapfrog integrator}).
-% Explicitly, HMC lifts the target distribution onto a joint probability distribution in phase space $(x, v)$.
-% %
-% A new state is then obtained by solving the equations of motion for a fixed period of time using a volume-preserving
-% integrator (most commonly the \emph{leapfrog integrator}).
-% %
-%
-The addition of random (typically normally distributed) momenta enourages long-distance jumpy in state space with a
-single Metropolis-Hastings (MH) step.
-%
-Let the `position' of the physical state be denoted by a vector $x \in\mathbb{R}^{n}$ and the conjugate momenta of the
-physical state be denoted by a vector $v \in\mathbb{R}^{n}$.  Then the Hamiltonian reads
-%
-\begin{align}
-    \mathcal{H}(x, v) &= U(x) + K(v)\\
-                      & = U(x) + \frac{1}{2} v^{T} \,v,
-    \label{eq:hamiltonian}
-\end{align}
-%
-where $U(x)$ is the potential energy, and $K(v)=\frac{1}{2}v^{T}v$ the kinetic energy.
-%
-We assume without loss of generality that the position and momentum variables are independently distributed.
-%
-That is, we assume the target distribution of the system can be written as $p(x, v) = p(x) p(v)$.
-%
-Further, instead of sampling $p(x)$ directly, HMC operates by sampling from the canonical distribution $p(x, v) =
-\frac{1}{Z} \exp(-\mathcal{H}(x, v)) = p(x) p(v)$, for some partition function $Z$ that provides a normalization
-factor.
-%
-Additionally, we assume the momentum is distributed according to an identity-covariance Gaussian given by $p(v) \propto
-\exp{(-\frac{1}{2} v^{T} \, v)}$ For convenience, we will denote the combined state of the system by $\xi \equiv (x,
-v)$.
-%
-From this augmented state $\xi$, HMC produces a proposed state $\xi^{\prime} = (x^{\prime}, v^{\prime})$ by
-approximately integrating Hamiltonian dynamics jointly on $x$ and $v$.
-%
-This integration is performed along approximate iso-probability contours of $p(x, v) = p(x) p(v)$ due to the
-Hamiltonians energy conservation.
-%
-
-\subsection{Hamiltonian Dynamics}
-% \todo[inline]{TODO:\@ Describe current issues with traditional HMC (mixing
-% between modes for GMM model, issues with using HMC in LQCD, etc.)}
-%
-One of the characteristic properties of Hamilton's equations is that they conserve the value of the Hamiltonian.
-%
-Because of this, every Hamiltonian trajectory is confined to an energy \emph{level set},
-%
-\begin{equation}
-  \mathcal{H}^{(-1)}(E) = \{x, v | \mathcal{H}(x, v) = E\}.
-\end{equation}
-%
-Our state $\xi = (x, v)$ then proceeds to explore this level set by integrating Hamilton's equations, which are shown
-as a system of differential equations in Eq.~\ref{eq:hamiltons_equations}.
-% along wich the state $\xi = (x, v)$
-% The state $\xi$ is modified in such a way that $\mathcal{H}(\xi)$ remains constant thorughout the simulation.
-%
-% The differential equations governing the motion through state space are given by
-%
-\begin{align}
-    \dot x_i &= \frac{\partial \mathcal{H}}{\partial v_i} = v_i\\
-    \dot v_i &= -\frac{\partial \mathcal{H}}{\partial x_i} = - \frac{\partial
-        U}{\partial x_i}
-\label{eq:hamiltons_equations}
-\end{align}
-%
-It can be shown~\cite{2012arXiv1206.1901N} that the above transformation is volume-preserving and reversible, two
-necessary factors to guarantee asymptotic convergence of the simulation to the target distribution.
-%
-The dynamics are simulated using the leapfrog integrator, which for a single time step consists of:
-%
-\begin{align}
-    v^{\frac{1}{2}} &= v - \frac{\eps}{2} \partial_x U(x)\\
-    x^{\prime} &= x + \eps v^{\frac{1}{2}}\\
-    v^{\prime} &= v - \frac{\eps}{2} \partial_x U(x^{\prime}).
-    \label{eq:generic_leapfrog}
-\end{align}
-%
-We write the action of the leapfrog integrator in terms of an operator $\mathbf{L}: \mathbf{L}\xi \equiv \mathbf{L}(x,
-v) \equiv (x^{\prime}, v^{\prime})$, and introduce a momentum flip operator $\mathbf{F}: \mathbf{F}(x, v) \equiv (x,
--v)$.
-%
-The Metropolis-Hastings acceptance probability for the HMC proposal is given by:
-%
-\begin{equation}
-    A(\mathbf{F}\mathbf{L} \xi | \xi) = \min\left(1,
-        \frac{p(\mathbf{F}\mathbf{L}\xi)}{p(\xi)}\left|
-        \frac{\partial\left[\mathbf{F}\mathbf{L}\xi\right]}
-        {\partial\xi^{T}}\right|\right),
-\label{eq:metropolis_hastings}
-\end{equation}
-%
-Where $\left|\frac{\partial\left[\mathbf{F}\mathbf{L}\xi\right]} {\partial\xi^{T}}\right|$ denotes the determinant of
-the Jacobian describing the transformation, and is equal to $1$ for traditional HMC.\@
-%
-In order to utilize these Hamiltonian trajectories to construct an efficient Markov transition, we need a mechanism for
-introducing momentum to a given point in the target parameter space.
-%
-Fortunately, this can be done by exploiting the probabilistic structure of the system~\cite{Betancourt2017ACI}.
-%
-To lift an initial point in parameter space into one on phase space, we simply sample from the conditional distribution
-over the momentum,
-%
-\begin{equation}
-  v \sim \pi(x | v).
-\end{equation}
-%
-Sampling the momentum directly from the conditional distribution ensures that this lift will fall into the typical set
-in phase space.
-%
-We can then proceed to explore the joint typical set by integrating Hamilton's equations as demonstrated above to
-obtain a new configuration $\xi \rightarrow \xip$.
-%
-We can then return to the target parameter space by simply projecting away the momentum,
-%
-\begin{equation}
-  (x, v) \rightarrow x
-\end{equation}
-%
-These three steps when performed in series gives a complete Hamiltonian Markov transition composed of random
-trajectories that rapidly explore the target distribution, as desired.
-%
-An example of this process can be seen in Fig~\ref{fig:hmc_phase_space}.
-%
-\begin{figure}[htpb]
-  \includegraphics[width=\textwidth]{hmc_figures/hmc_phase_space11}
-  \caption{\emph{Visualizing HMC for a $1D$ Gaussian} (example from~\cite{Betancourt2017ACI}). Each Hamiltonian Markov
-    transition lifts the initial state onto a \color{gray}{random level set of the Hamiltonian, }\color{black}
-    $\mathcal{H}^{(-1)}(E)$, which can then be explored with a \color{blue}{Hamiltonian trajectory }\color{black}
-    before \color{red}{projecting back down }\color{black} to the
-  \color{green}{target parameter space}\color{black}.}%
-\label{fig:hmc_phase_space}
-\end{figure}
-
-\subsubsection{Properties of Hamiltonian Dynamics}
-%
-There are three fundamental properties of Hamiltonian dynamics which are crucial to its use in constructing Markov
-Chain Monte Carlo updates.
-%
-\begin{enumerate}
-    \item \textbf{Reversibility:} Hamiltonian dynamics are \textit{reversible}
-        --- the mapping from $\mathbf{L}: \xi(t) \rightarrow \xi^{\prime} =
-        \xi(t + s)$ is one-to-one, and consequently has an inverse
-        $\mathbf{L}^{-1}$, obtained by negating the time derivatives in
-        Eq.~\ref{eq:hamiltons_equations}.
-    \item \textbf{Conservation of the Hamiltonian:} Moreover, the dynamics
-        \textit{keeps the Hamiltonian invariant}.
-    \item \textbf{Volume preservation:} The final property of Hamiltonian
-        dynamics is that it \textit{preserves volume} in $(x, v)$ phase space
-        (i.e. Liouville's Theorem).
-\end{enumerate}
-%
 % L2HMC {{{
-\section{L2HMC}%
-\label{sec:l2hmc_l2hmc}
+% \section{L2HMC}%
+\section{Generalizing the Leapfrog Integrator}
+% \label{sec:l2hmc_l2hmc}
 As in the previously described HMC algorithm, we start by augmenting the current state $x \in \mathbb{R}^n$ with a
 continuous momentum variable $v \in \mathbb{R}^{n}$ drawn from a standard normal distribution.
 %
@@ -410,7 +69,6 @@ The mask $m^t$ is drawn uniformly from the set of binary vectors satisfying $\su
 Additionally, we write $\bar m^{t} = \mathbbm{1} - m^{t}$ and $x_{m^t} = x \odot m^{t}$, where $\odot$ denotes
 element-wise multiplication, and $\mathbbm{1}$ the vector of $1$'s in each entry.
 %
-\subsection{Augmented Leapfrog}
 %
 We begin with a subset of the augmented space, $\zeta_1 \equiv (x, \partial_{x} U(x), t)$, independent of the momentum
 $v$.
@@ -496,7 +154,7 @@ into two parts following the approach outlined in \emph{Real-valued Non-Volume P
 
 %
 % \subsection{MCMC Transitions}
-\subsection{Metropolis-Hastings accept/reject}
+\subsection{Metropolis-Hastings Accept/Reject}
 %
 Written in terms of these transformations, the augmented leapfrog operator $\mathbf{L}_{\theta}$ consists of $M$
 sequential applications of the single-step leapfrog operator $\mathbf{L}_{\theta} \xi = \mathbf{L}_{\theta}(x, v, d) =
@@ -523,17 +181,34 @@ determinant of the Jacobian.
 These non-volume preserving transformations have the effect of deforming the energy landscape, which, depending on the
 nature of the transformation, may allow for the exploration of regions of space which were previously inaccessible.
 %
-\begin{figure}[htpb]
-    \centering
-    \includegraphics[width=0.48\textwidth]{energy_barrier}
-    \includegraphics[width=0.48\textwidth]{energy_barrier_new}
-    \caption{Example of how the determinant of the Jacobian can deform the
-      energy landscape. (left) Molecular dynamics (MD) update gets stuck in
-      one of the two local minima. (right) After deforming the energy
-      landscape, the MD update is able to explore both minima, resulting in a
-      better description of the target 
-      distribution.}\label{fig:energy_barrier}
+\newcommand{\energyA}{\includegraphics[width=0.4\textwidth]{energy_landscape/original_energy_landscape.pdf}}
+\newcommand{\energyB}{\includegraphics[width=0.4\textwidth]{energy_landscape/modified_energy_landscape.pdf}}
+%
+\begin{figure}
+  \centering 
+  \Huge
+  \parbox{\widthof{\energyA}}{\energyA} $\overset{\mathcal{J}}{\longrightarrow}$
+  \parbox{\widthof{\energyB}}{\energyB} 
+  \normalsize
+  \caption{Example of how the determinant of the Jacobian can deform the energy landscape.}
 \end{figure}
+
+
+% \[\vcenter{\energyA} \hbox{\Huge\overset{\mathcal{J}}{\longrightarrow}} \vcenter{\energyB}\]
+% \begin{figure}[htpb]
+%     \centering
+%     \vcenter{
+%     \includegraphics[width=0.4\textwidth]{energy_landscape/original_energy_landscape.pdf}
+%     \Huge$\overset{\mathcal{J}}{\longrightarrow}$
+%     % \includegraphics[width=0.15\texwidth]{energy_landscape/jacobian1.pdf}
+%     \includegraphics[width=0.4\textwidth]{energy_landscape/modified_energy_landscape.pdf}
+%     \caption{Example of how the determinant of the Jacobian can deform the
+%       energy landscape. (left) Molecular dynamics (MD) update gets stuck in
+%       one of the two local minima. (right) After deforming the energy
+%       landscape, the MD update is able to explore both minima, resulting in a
+%       better description of the target
+%       distribution.}\label{fig:energy_barrier}
+% \end{figure}
 %
 To simplify our notation, introduce an additional operator $\mathbf{R}$ that re-samples the momentum and direction,
 e.g.\ given $\xi = (x, v, d)$, $\mathbf{R}\,\xi = (x, v^{\prime}, d^{\prime})$ where $v^{\prime} \sim \mathcal{N}(0,
@@ -559,107 +234,56 @@ All of the previous expressions for the augmented leapfrog updates represent the
 We can derive the expressions for the backward direction ($d = -1$) by reversing the order of the updates (i.e.\ $\vpp
 \rightarrow \vp$, then $\xpp \rightarrow \xp$, followed by $\xp \rightarrow x$ and finally $\vp \rightarrow v$).
 %
-For completeness, we include in Sec.~\ref{subsubsec:augmented_leapfrog_equations_forward} and
-Sec~\ref{subsubsec:augmented_leapfrog_equations_backward} all of the equations (both forward and backward directions)
+For completeness, we include in Sec.~\ref{sec:lf_forward} and
+Sec~\ref{sec:lf_backward} all of the equations (both forward and backward directions)
 relevant for updating the variables of interest in our augmented leapfrog sampler.
 
 %
-\clearpage
+% \clearpage
 % \subsection{Augmented Leapfrog Equations}%
 % \label{subsec:augmented_leapfrog_equations}
 %
-\subsubsection{Forward direction \texorpdfstring{$(d = 1)$}{(d = 1)}:}%
-\label{subsubsec:augmented_leapfrog_equations_forward}
-%
-\begin{enumerate}
-  \item Momentum update: $\,\,\zeta_{1} = (x, \partial_{x}\, U(x), t)$,
-    $\,\, |\mathcal{J}| = \exp{\left(\frac{\eps}{2}\mathbbm{1}\odot S_{v}(\zeta_1)\right)}$
-    %
-    \vspace{-20pt}
-    \begin{equation}
-      \vp = v \odot \exp{\left(\frac{\eps}{2}S_{v}(\zeta_{1})\right)}% 
+\section{Forward direction \texorpdfstring{$(d = 1)$}{(d = 1)}:}%
+\label{sec:lf_forward}
+% \vspace{-20pt}
+\begin{align}
+  \vp &= v \odot \exp{\left(\frac{\eps}{2}S_{v}(\zeta_{1})\right)}% 
         - \frac{\eps}{2}\left[\partial_{x}\,U(x)\odot \exp{\left(\eps Q_{v}(\zeta_{1})\right)}%
-        + T_{v}(\zeta_{1})\right]
-    \end{equation}
-    \vspace{-50pt}
-  \item Position update: $\,\,\zeta_{2} = (x_{\bar{m}^{t}}, v, t)$,
-    $\,\, |\mathcal{J}| = \exp{\left(\eps m^{t}\odot S_{x}(\zeta_2)\right)}$
-    %
-    \vspace{-20pt}
-    \begin{equation}
-      \xp = x_{\bar{m}^{t}} + m^{t}\odot \left[x \odot \exp{\left(\eps S_{x}(\zeta_{2})\right)}%
-        + \eps\left(\vp\odot\exp{\left(\eps Q_{x}(\zeta_{2})\right)} + T_{x}(\zeta_{2})\right)\right]
-    \end{equation}
-    \vspace{-50pt}
-  \item Position update: $\,\,\zeta_{3} = (x^{\prime}_{m^{t}}, v, t)$,
-    $\,\, |\mathcal{J}| = \exp{\left(\eps \bar{m}^{t}\odot S_{x}(\zeta_3)\right)}$
-    %
-    \vspace{-20pt}
-    \begin{equation}
-      \xpp = x^{\prime}_{m^{t}} + \bar{m}^{t}\odot \left[\xp \odot \exp{\left(\eps S_{x}(\zeta_{3})\right)}%
-        + \eps\left(\vp\odot\exp{\left(\eps Q_{x}(\zeta_{3})\right)} + T_{x}(\zeta_{3})\right)\right]
-    \end{equation}
-    \vspace{-50pt}
-  \item Momentum update: $\,\,\zeta_{4} = (\xpp, \partial_{x}\, U(\xpp), t)$,
-    $\,\, |\mathcal{J}| = \exp{\left(\frac{\eps}{2}\mathbbm{1}\odot S_{v}(\zeta_{4})\right)}$
-    %
-    \vspace{-20pt}
-    \begin{equation}
-      \vpp = \vp \odot \exp{\left(\frac{\eps}{2}S_{v}(\zeta_{4})\right)}%
+        + T_{v}(\zeta_{1})\right] \\
+  \xp &= x_{\bar{m}^{t}} + m^{t}\odot \left[x \odot \exp{\left(\eps S_{x}(\zeta_{2})\right)}%
+        + \eps\left(\vp\odot\exp{\left(\eps Q_{x}(\zeta_{2})\right)} + T_{x}(\zeta_{2})\right)\right] \\
+  \xpp &= x^{\prime}_{m^{t}} + \bar{m}^{t}\odot \left[\xp \odot \exp{\left(\eps S_{x}(\zeta_{3})\right)}%
+        + \eps\left(\vp\odot\exp{\left(\eps Q_{x}(\zeta_{3})\right)} + T_{x}(\zeta_{3})\right)\right] \\
+  \vpp &= \vp \odot \exp{\left(\frac{\eps}{2}S_{v}(\zeta_{4})\right)}%
         - \frac{\eps}{2}\left[\partial_{x}\,U(\xpp)\odot \exp{\left(\eps Q_{v}(\zeta_{4})\right)}%
           + T_{v}(\zeta_{4})\right]
-    \end{equation}
-    % \vspace{-10pt}
-\end{enumerate}
-\vspace{-20pt}
+\end{align} 
 %
-\subsubsection{Backward direction \texorpdfstring{$(d = -1)$}{(d = -1)}:}%
-\label{subsubsec:augmented_leapfrog_equations_backward}
+With $\zeta_{1} = (x, \partial_{x}\, U(x), t)$, $\zeta_{2} = (x_{\bar{m}^{t}}, v, t)$, $\zeta_{3} =
+(x^{\prime}_{m^{t}}, v, t)$, $\zeta_{4} = (\xpp, \partial_{x}\, U(\xpp), t)$.
 %
-\begin{enumerate}
-  \item Momentum update: $\,\,\zeta_{1} = (x, \partial_{x} U(x), t)$,
-    $\,\, |\mathcal{J}| = \exp{\left(-\frac{\eps}{2}\mathbbm{1}\odot S_{v}(\zeta_1)\right)}$
-    %
-    \vspace{-20pt}
-    \begin{equation}
-      v^{\prime} = {\left\{v + \frac{\eps}{2}\left[\partial_{x}\,U(x)\odot \exp{\left(\eps Q_{v}(\zeta_{1})\right)}%
-            + T_{v}(\zeta_{1})\right]\right\}} \odot \exp{\left(-\frac{\eps}{2}S_{v}(\zeta_{1})\right)}
-    \end{equation}
-    \vspace{-50pt}
-  \item Position update: $\,\,\zeta_{2} = (x_{m^{t}}, v, t)$,
-    $\,\, |\mathcal{J}| = \exp{\left(-\eps m^{t}\odot S_{x}(\zeta_2)\right)}$
-    %
-    \vspace{-20pt}
-    \begin{equation}
-      \xp = x_{m^{t}} + \bar{m}^{t}\odot%
-        {\left[x - \eps{\left(\exp{\left(\eps Q_{x}(\zeta_{2})\right)}\odot \vp%
-                + T_{x}(\zeta_{2})\right)}\right]}\odot \exp{\left(-\eps S_{x}(\zeta_{2})\right)}
-    \end{equation}
-    \vspace{-50pt}
-  \item Position update: $\,\,\zeta_{3} = (x^{\prime}_{m^{t}}, v, t)$,
-    $\,\, |\mathcal{J}| = \exp{\left(-\eps \bar{m}^{t}\odot S_{x}(\zeta_3)\right)}$
-    %
-    \vspace{-20pt}
-    \begin{equation}
-      \xpp = x_{\bar{m}^{t}} + m^{t}\odot%
-        {\left[\xp - \eps{\left(\exp{\left(\eps Q_{x}(\zeta_{3})\right)}\odot \vp%
-                + T_{x}(\zeta_{3})\right)}\right]}\odot \exp{\left(-\eps S_{x}(\zeta_{3})\right)}
-    \end{equation}
-    \vspace{-50pt}
-  \item Momentum update: $\,\,\zeta_{4} = (\xpp, \partial_{x} U(\xpp), t)$,
-    $\,\, |\mathcal{J}| = \exp{\left(-\frac{\eps}{2}\mathbbm{1}\odot S_{v}(\zeta_4)\right)}$
-    %
-    \vspace{-20pt}
-    \begin{equation}
-      v^{\prime\prime} = {\left\{\vp + \frac{\eps}{2}\left[\partial_{x}\,U(\xpp)\odot%
-            \exp{\left(\eps Q_{v}(\zeta_{1})\right)}
-            + T_{v}(\zeta_{1})\right]\right\}}\odot 
-            \exp{\left(-\frac{\eps}{2}S_{v}(\zeta_{4})\right)}
-    \end{equation}
-    % \vspace{-10pt}
-\end{enumerate}
+\section{Backward direction \texorpdfstring{$(d = -1)$}{(d = -1)}:}%
+\label{sec:lf_backward}
 %
-\subsection{Determinant of the Jacobian}
+\begin{align}
+  v^{\prime} &= {\left\{v + \frac{\eps}{2}\left[\partial_{x}\,U(x)\odot \exp{\left(\eps Q_{v}(\zeta_{1})\right)}%
+    + T_{v}(\zeta_{1})\right]\right\}} \odot \exp{\left(-\frac{\eps}{2}S_{v}(\zeta_{1})\right)} \\
+  \xp &= x_{m^{t}} + \bar{m}^{t}\odot%
+    {\left[x - \eps{\left(\exp{\left(\eps Q_{x}(\zeta_{2})\right)}\odot \vp%
+    + T_{x}(\zeta_{2})\right)}\right]}\odot \exp{\left(-\eps S_{x}(\zeta_{2})\right)} \\
+  \xpp &= x_{\bar{m}^{t}} + m^{t}\odot%
+    {\left[\xp - \eps{\left(\exp{\left(\eps Q_{x}(\zeta_{3})\right)}\odot \vp%
+    + T_{x}(\zeta_{3})\right)}\right]}\odot \exp{\left(-\eps S_{x}(\zeta_{3})\right)} \\
+  v^{\prime\prime} &= {\left\{\vp + \frac{\eps}{2}\left[\partial_{x}\,U(\xpp)\odot%
+    \exp{\left(\eps Q_{v}(\zeta_{1})\right)}
+    + T_{v}(\zeta_{1})\right]\right\}}\odot 
+    \exp{\left(-\frac{\eps}{2}S_{v}(\zeta_{4})\right)}
+\end{align}
+%
+With $\zeta_{1} = (x, \partial_{x}\, U(x), t)$, $\zeta_{2} = (x_{m^{t}}, v, t)$, $\zeta_{3} =
+(x^{\prime}_{\bar{m}^{t}}, v, t)$, $\zeta_{4} = (\xpp, \partial_{x}\, U(\xpp), t)$.
+%
+\section{Determinant of the Jacobian}
 In terms of the auxiliary functions $S_{i}, Q_{i}, T_{i}$, we can compute the Jacobian:
 %
 \begin{align}
@@ -670,10 +294,11 @@ In terms of the auxiliary functions $S_{i}, Q_{i}, T_{i}$, we can compute the Ja
       + \eps \bar{m}^{t} \cdot S_{x}(\zeta_{3}^{t}) + \frac{\eps}{2}\mathbbm{1} \cdot S_{v}(\zeta_{4}^{t})\right]}.
 \end{align}
 %
-for $N_{\mathrm{LF}}$ leapfrog steps, and $\zeta_{i}^{t}$ denotes the intermediary variable $\zeta_{i}^{t}$ at time
-step $t$ and $d$ is the direction of $\xi$, i.e.\ $d = 1 \,\, (-1)$ for the forward (backward) update.
+where $N_{\mathrm{LF}}$ is the number of leapfrog steps, and $\zeta_{i}^{t}$ denotes the intermediary variable
+$\zeta_{i}^{t}$ at time step $t$ and $d$ is the direction of $\xi$, i.e.\ $d = 1 \,\, (-1)$ for the forward (backward)
+update.
 %
-\subsection{Network Architecture}%
+\section{Network Architecture}%
 \label{subsec:l2hmc_network}
 As previously mentioned, each of the functions $Q$, $S$, and $T$, are implemented using multi-layer perceptrons with
 shared weights.
@@ -688,7 +313,7 @@ illustrative purposes in Fig~\ref{fig:x_net_flowchart}.
 %
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=\textwidth]{generic_net/generic_net1.png}
+  \includegraphics[width=\textwidth]{generic_net/generic_net4.png}
   \caption{Illustration showing the generic (fully-connected) network architecture for training $S_v$, $Q_v$, and
   $T_v$.}%
 \label{fig:generic_net}
@@ -700,8 +325,10 @@ illustrative purposes in Fig~\ref{fig:x_net_flowchart}.
 %
 % Since the networks responsible for updating the, we describe the network architecture responsible for updating the
 % momentum $v$.
+
 The network takes as input $\zeta_1 = (x, \partial_{x} U(x), t)$, where $x, v \in \mathbb{R}^{n}$, and $t$ is encoded
-as $\tau(t) = \left(\cos{(\frac{2\pi t}{M})},\right.  \left.\sin{(\frac{2\pi t}{M})}\right)$.
+as $\tau(t) = \left(\cos{(\frac{2\pi t}{N_{\mathrm{LF}}})},\right.  \left.\sin{(\frac{2\pi
+t}{N_{\mathrm{LF}}})}\right)$.
 %
 Each of the inputs is then passed through a fully-connected (`dense' layer), consisting of $n_h$ hidden units
 %
@@ -758,7 +385,7 @@ $S_v$.
 \end{figure}
 
 %
-\subsection{Training Procedure}
+\section{Training Procedure}
 %
 By augmenting traditional HMC methods with these trainable functions, we hope to obtain a sampler that has the
 following key properties:
@@ -771,7 +398,7 @@ following key properties:
 \end{enumerate}
 %
 Following the results in~\cite{10.2307/24308995}, we design a loss function with the goal of maximizing the eqpected
-squared jumped distance (or analogously, minimizng the lag-one autocorrelation).
+squared jumped distance (or analogously, minimizing the lag-one autocorrelation).
 %
 To do this, we first introduce 
 \begin{equation}
@@ -819,60 +446,59 @@ For completeness, we include the full algorithm~\cite{2017arXiv171109268L} used 
 %   \textbf{(5.)} learning rate schedule ${(\alpha_{t})}_{t\leq n_{\text{iters}}}$,
 %   \textbf{(6.)} batch size $N$, \textbf{(7.)} scale parameter $\lambda$,
 %   and \textbf{(8.)} regularization strength $\lambda_b$.}\;
-
-\begin{algorithm}[H]
+%
+\begin{algorithm}[htbp]%
+\label{alg:l2hmc}
+  % \centering
     \SetKwProg{Fn}{def}{\string:}{}%
     \SetKwFunction{Range}{range}%
     \SetKwFor{For}{for}{\string:}{}%
     \SetKwIF{If}{ElseIf}{Else}{if}{:}{elif}{else:}{}%
     \SetKwFor{While}{while}{:}{fintq}%
-    \AlgoDontDisplayBlockMarkers\SetAlgoNoEnd\SetAlgoNoLine%
+    \AlgoDontDisplayBlockMarkers\SetAlgoNoEnd%
+    % \SetAlgoNoLine%
     \DontPrintSemicolon%
     \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}%
-    \caption{Training procedure for L2HMC.}%
+    \caption{Training procedure for the L2HMC algorithm.}%
     \Input{%
       \vspace{-5pt}
       \begin{enumerate}
-        \item Energy function $U: \mathcal{X} \rightarrow \mathbb{R}$ and its gradient $\nabla_x U: \mathcal{X}
-          \rightarrow \mathcal{X}$\
-          \vspace{-15px}
-        \item Initial distribution over the augmented state space $q$
-          \vspace{-15px}
-        \item Number of iterations $N_{\mathrm{train}}$
-          \vspace{-15px}
-        \item Number of leapfrog steps $N_{\mathrm{LF}}$
-          \vspace{-15px}
-        \item Learning rate schedule ${(\alpha_{t})}_{t\leq N_{\text{train}}}$
-          \vspace{-15px}
-        \item Batch size $N_{\mathrm{samples}}$
-          \vspace{-15px}
-        \item Scale parameter $\lambda$
-          \vspace{-15px}
-        \item Regularization strength $\lambda_b$.
+        \item A (potential) energy function, $U: \mathcal{X} \rightarrow \mathbb{R}$ and its gradient $\nabla_x U:
+          \mathcal{X} \rightarrow \mathcal{X}$\
+          \vspace{-10px}
+        \item Initial distribution over the augmented state space, $q$
+          \vspace{-10px}
+        \item Number of iterations, $N_{\mathrm{train}}$
+          \vspace{-10px}
+        \item Number of leapfrog steps, $N_{\mathrm{LF}}$
+          \vspace{-10px}
+        \item Learning rate schedule, ${(\alpha_{t})}_{t\leq N_{\text{train}}}$
+          \vspace{-10px}
+        \item Batch size, $N_{\mathrm{samples}}$
+          \vspace{-10px}
+        \item Scale parameter, $\lambda$
+          \vspace{-10px}
+        \item Regularization strength, $\lambda_b$
       \end{enumerate}
     }\;
-    \vspace{-20px}
-    Initialize the parameters of the sampler $\theta$.\;
-    Initialize ${\{\xi_{p^{(i)}}\}}_{i\leq N_{\mathrm{samples}}}$ from $q{(\xi)}$.\;
+    \vspace{-15px}
+    Initialize the parameters of the sampler, $\theta$\;
+    Initialize ${\{\xi_{p^{(i)}}\}}_{i\leq N_{\mathrm{samples}}}$ from $q{(\xi)}$\;
     \For{$t = 0$ \KwTo\ $N_{\mathrm{train}}$}{%
-      Sample a minibatch ${\left\{\xi_{q}^{(i)}\right\}}_{i\leq N_{\mathrm{samples}}}$ from $q{(\xi)}$.\;
-      $\mathcal{L}$ $\leftarrow\ 0$\;
+      Sample a minibatch, ${\left\{\xi_{q}^{(i)}\right\}}_{i\leq N_{\mathrm{samples}}}$ from $q{(\xi)}$.\;
+      $\mathcal{L}\leftarrow 0$\;
       \For{$i = 1$ \KwTo$N_{\mathrm{LF}}$} {%
-        $\xi_{p}^{(i)} \leftarrow\ \mathbf{R}\,\xi_p^{(i)}$\;
-        % \tcp*{\tiny{resample the momentum}}\;
-        % \tcp{\tiny{perform MD using augmented leapfrog, calc.\ loss}}\;
-        $\mathcal{L} \leftarrow \mathcal{L} + \ell_{\lambda}\left(\xi_p^{(i)}, \FLq\xi_p^{(i)},
-          A(\FLq\xi^{(i)}_p|\xi^{(i)}_p)\right) + \lambda_b \ell_{\lambda}\left(\xi^{(i)}_q, \FLq\xi^{(i)}_q,
-          A(\FLq\xi^{(i)}_q|\xi^{(i)}_q)\right)$\;
-
-        $\xi_p^{(i)} \leftarrow \FLq\xi^{(i)}_p$ with probability $A(\FLq\xi^{(i)}_p|\xi^{(i)}_p)$\; 
-      }
+          $\xi_{p}^{(i)} \leftarrow\ \mathbf{R}\,\xi_p^{(i)}$\;
+          $\mathcal{L} \,\,\,\,\leftarrow\mathcal{L} + \ell_{\lambda}\left(\xi_p^{(i)}, \FLq\xi_p^{(i)},
+            A (\FLq\xi^{(i)}_p|\xi^{(i)}_p)\right) + \lambda_b \ell_{\lambda}\left(\xi^{(i)}_q, \FLq\xi^{(i)}_q,
+            A (\FLq\xi^{(i)}_q|\xi^{(i)}_q)\right)$\;
+          $\xi_p^{(i)} \leftarrow \FLq\xi^{(i)}_p$ with probability $A(\FLq\xi^{(i)}_p|\xi^{(i)}_p)$\;
+      }%
+      \vspace{2pt}
       $\theta\ \leftarrow\ \theta-\alpha_t \nabla_{\theta} \mathcal{L}$\;
     }%
-\label{alg:l2hmc}
 \end{algorithm}
     
-
 \section{Gaussian Mixture Model}%
 \label{sec:l2hmc_gmm}
 %
@@ -1091,7 +717,7 @@ This is a consequence of the fact that the Markov chain tends to get stuck in a 
 %   \end{figure}
 %
 %
-\subsection{Modified Network Architecture}
+\subsection{Modified Network Architecture}%
 \label{subsec:l2hmc_modified_network}
 %
 In order to better account for the rectangular geometry of the lattice, a stack of convolutional layers was prepended
@@ -1230,7 +856,7 @@ loss from the standard and topological loss terms respectively, and $\alpha_{\ma
 Eq.~\ref{eq:topological_loss_term1} weighs the contribution of configurations drawn from the initialization
 distribution.
 %
-\subsection*{Issues with the Average Plaquette}
+\subsection{Issues with the Average Plaquette}
 %
 Upon further testing, an issue was encountered in which the average plaquette $\langle \phi_{P}\rangle$ seems to
 converge to a value which is noticeably different from the expected value in the infinite volume limit.
@@ -1245,16 +871,28 @@ The parameters used in Fig~\ref{fig:bad_convergence} are as follows: $L = 8$, $N
 In Fig~\ref{fig:good_convergence}, the only change was the weight factor for the topological charge term in the loss
 function $\alpha_{Q} = 0$.
 %
-\begin{figure}[htpb]\label{fig:bad_convergence}
+\begin{figure}[htpb]%
+\label{fig:bad_convergence}
   \centering
-  \includegraphics[width=0.49\textwidth]{plaq_plots/plaqs_vs_step_bad.pdf}
-  \includegraphics[width=0.49\textwidth]{plaq_plots/plaqs_diffs_vs_step_bad.pdf}
-  \includegraphics[width=0.49\textwidth]{plaq_plots/plaqs_vs_step_good.pdf}
-  \includegraphics[width=0.49\textwidth]{plaq_plots/plaqs_diffs_vs_step_good.pdf}
-  \caption{\textbf{Top row}: $\alpha_{Q} = 0.5$ \textit{(left)} Average plaquette $\langle\phi_{P}\rangle$ vs.\ step
-    for $L=8$; \textit{(right)} the difference between the observed and expected value of the average plaquette
-    $\delta_{\mathrm{plaq}}$ \textbf{Bottom row}: $\alpha_{Q} = 0$, all other parameters kept the same. Note that in
-    this case $\langle \phi_{P}\rangle$ converges to the expected value from the infinite volume limit.} 
+  % \begin{subfigure}{\textwidth}%
+    \includegraphics[width=0.49\textwidth]{plaq_plots/plaqs_vs_step_bad.pdf}
+    \includegraphics[width=0.49\textwidth]{plaq_plots/plaqs_diffs_vs_step_bad.pdf}
+    \caption{\textbf{(left)}: Average plaquette $\langle\phi_{P}\rangle$ vs.\ step
+      for $L=8$, $N_{\mathrm{LF}} = 7$, and $\alpha_{Q} = 0.5$ \textbf{(right)}: Difference between the observed and
+      expected value of the average plaquette $\delta_{\phi_{P}}$ vs.\ step. Note that $\delta_{\phi_{P}} \neq 0$.}
+\end{figure}
+  % \end{subfigure}
+  % \vspace{1em}
+\begin{figure}[htpb]%
+\label{fig:good_convergence}
+  \vspace{-20pt}
+  \centering
+  % \begin{subfigure}{\textwidth}%
+    \includegraphics[width=0.49\textwidth]{plaq_plots/plaqs_vs_step_good.pdf}
+    \includegraphics[width=0.49\textwidth]{plaq_plots/plaqs_diffs_vs_step_good.pdf}
+    \caption{Same quantities as in Fig~\ref{fig:bad_convergence}, with $\alpha_{Q} = 0$. Note that the discrepancy
+      $\delta_{\phi_{P}}$ is no longer present.}
+  % \end{subfigure}
 \end{figure}
     % Each colored line represents a unique chain, and the black line shows the
     % average over all chains.  (left) $\alpha_{Q} = 1$, illustrating the failure
@@ -1268,12 +906,14 @@ function $\alpha_{Q} = 0$.
   %   observed and expected value in the infinite volume limit (denoted by the red line). Note that $\langle
   % \phi_{P}\rangle$ converges to the expected value in this case.}
 %
-In order to quantify this unexpected behavior, we denote by $\phi_{P}^{(\mathrm{obs})}$ the \emph{observed} value of
-the average plaquette $\phi_{P}$ and $\phi_{P}^{(\mathrm{exp})}$ the \emph{expected} value, we can define the quantity
+In order to quantify this unexpected behavior, we can calculate the difference between the observed value of the
+average plaquette, $\langle \phi_{P}\rangle$ and the expected value $\phi_{P}^{(*)}$:
+% we denote by $\phi_{P}^{(\mathrm{obs})}$ the \emph{observed} value of
+% the average plaquette $\phi_{P}$ and $\phi_{P}^{(\mathrm{exp})}$ the \emph{expected} value, we can define the quantity
 % 
 \begin{equation}
-  {\delta_{\phi_P}(\alpha_Q, N_{\mathrm{LF}}) \equiv \langle \phi_P^{\mathrm{(obs)}}\rangle 
-  - \langle{\phi_{P}^{\mathrm{(exp)}}}\rangle \neq 0}.
+  {\delta_{\phi_P}}(\alpha_Q, N_{\mathrm{LF}}) \equiv \langle \phi_P\rangle - \phi_{P}^{(*)} \neq 0
+  % - \langle{\phi_{P}^{\mathrm{(exact)}}}\rangle \neq 0}.
 \end{equation}
 %
 Which allows us to measure the severity of this discrepancy.%
@@ -1293,13 +933,13 @@ number of leapfrog steps $N_{\mathrm{LF}}$.
 In an additional systematic attempt to debug the problem, the sampler was trained and evaluated multiple times over a
 range of different values of both $N_{\mathrm{LF}}$ and $\alpha_{Q}$.
 %
-These results are included in Sec.~\ref{subsec:debugging_results}.
+These results are included in Sec.~\ref{chap:debugging_results}.
 %
 Frustratingly, the issue seemed to be almost irreproducible.
 %
 Running the training/evaluation processes multiple times using the exact same set of initial parameters on the exact
 same hardware it was observed that sometimes the discrepancy was present while other times it was not.
-%
+
 % Also, as expected, when ran for the same number of leapfrog steps and everything else being the same, the difference
 % between the observed and expected value of $\langle\phi_{P}\rangle$ increases as $\alpha_{Q}: 0 \rightarrow 1$.
 %
@@ -1322,103 +962,255 @@ same hardware it was observed that sometimes the discrepancy was present while o
 % dynamics (MD) step consists of a momentum refreshment followed by $N_{\mathrm{LF}}$ leapfrog steps, and finally a
 % Metropolis-Hastings accept/reject.} below obtained using both the trained L2HMC sampler as well as the generic HMC
 % sampler for comparison.
-%
-In each of the plots below, the L2HMC sampler was trained for $25,000$ steps with a simulated annealing schedule
-beginning at $\beta = 2.0$ and ending at $\beta = 5.0$.
-%
-Additionally, the training was distributed across $16$ nodes on COOLEY using \texttt{horovod}.
-%
-The results are averaged over all $N_{\mathrm{samples}}$ samples in the
-mini-batch.
 
-\subsection{Systematic Debugging Results}%
-\label{subsec:debugging_results}
-\begin{figure}[htpb]\label{fig:plaq_diff_plots_lf5}
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf5_beta5.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf5_beta5_HMC.eps}
-  %
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf5_beta6.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf5_beta6_HMC.eps}
-  \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 5$ for $\beta = 5.0$ (top row) and $\beta = 6.0$ (bottom
-    row). The results from the trained L2HMC (generic HMC) sampler are shown in the left (right) column. As can be seen,
-    the difference $\delta_{\phi_{P}}$ remains roughly consistent for all values of $\alpha_Q$.}
-\end{figure}
+\section{Conclusion}%
+\label{sec:l2hmc_conclusion}
+% ---------------------------------------------------------------------------------------------------------------------
+% In particular, by drawing a series of correlated samples from a well-defined proposal, our collection of samples will
+% converge in distribution to the target equilibrium distribution $\pi$, a technique known as Markov Chain Monte Carlo
+% (MCMC) sampling.
+% %
+% MCMC methods are asymptotically unbiased and remain applicable even in cases when we are not able to sample from $\pi$
+% directly, making them a versatile class of algorithms that are widely used across a variety of scientific disciplines.
+% %
+% While MCMC methods undoubtedly provide an incredibly useful set of tools for
+% ---------------------------------------------------------------------------------------------------------------------
+In conclusion, we have seen how the Hamiltonian Monte Carlo algorithm follows from the Metropolis-Hastings algorithm
+used in generic Markov Chain Monte Carlo methods, and why this approach is often preferred when attempting to sample
+from the high-dimensional distributions characteristic of lattice gauge theory models.
+
+% as well as the possible benefits and downsides of
+% MCMC methods are defined and used in practice to
+Following this, a detailed description of the Hamiltonian Monte Carlo algorithm was presented, as well as some of the
+common issues faced when it is applied to lattice quantum chromodynamics.
 %
-\begin{figure}[htpb]\label{fig:plaq_diff_plots_lf6}
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf6_beta5.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf6_beta5_HMC.eps}
-  %
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf6_beta6.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf6_beta6_HMC.eps}
-  \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 5$ for $\beta = 5.0$ (top row) and $\beta = 6.0$ (bottom
-    row). The results from the trained L2HMC (generic HMC) sampler are shown in the left (right) column. As can be seen,
-    the difference $\delta_{\phi_{P}}$ remains roughly consistent for all values of $\alpha_Q$.}
-\end{figure}
+In order to address some of these issues, we then proceeded to introduce a learned inference architecture that
+successfully generalized HMC by augmenting the traditional leapfrog integrator with a set of carefully-chosen functions
+which are parameterized by weights in a neural network.
 %
-\begin{figure}[htpb]\label{fig:plaq_diff_plots_lf7}
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf7_beta5.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf7_beta5_HMC.eps}
-  %
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf7_beta6.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf7_beta6_HMC.eps}
-  \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 7$ As can be seen, the difference $\delta_{\phi_{P}}$ is
-    noticeably larger for $\alpha_Q = 0.75$, but remains roughly consistent for all other values of $\alpha_Q$.}
-\end{figure}
+This system is then trained to learn a MCMC kernel that encourages fast mixing and convergence to the target
+distribution.
 %
-\begin{figure}[htpb]\label{fig:plaq_diff_plots_lf8_beta5}
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf8_beta5.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf8_beta5_HMC.eps}
-  %
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf8_beta6.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf8_beta6_HMC.eps}
-  \caption{$\plaqdiff$ vs. MD step with $N_{\mathrm{LF}} = 8$. As can be seen, the difference $\delta_{\phi_{P}}$
-    remains roughly consistent for all values of $\alpha_Q$.}
-\end{figure}
+While this transition kernel is no longer symplectic, we are able to retain the strong theoretical gaurantees of HMC by
+enforcing a tractable MH accept/reject step, making L2HMC potentially capable of sampling from very challenging
+distributions.
 %
-\begin{figure}[htpb]\label{fig:plaq_diff_plots_lf9}
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf9_beta5.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf9_beta5_HMC.eps}
-  %
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf9_beta6.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf9_beta6_HMC.eps}
-  \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 9$. As can be seen, the difference $\delta_{\phi_{P}}$ is
-  largest for $\alpha_Q = 0.0$ and $\alpha_Q = 0.5$.}
-\end{figure}
+Having introduced the necessary background, we then looked at applying this algorithm to the notoriously difficult
+two-dimensional Gaussian mixture model.
 %
-\begin{figure}[htpb]\label{fig:plaq_diff_plots_lf10}
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf10_beta5.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf10_beta5_HMC.eps}
-  %
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf10_beta6.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf10_beta6_HMC.eps}
-  \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 10$. As can be seen, the difference $\delta_{\phi_{P}}$ is
-    smallest for $\alpha_Q = 0.,\,\,0.75$ and largest for $\alpha_Q = 0.25$, while $\alpha_Q = 0.5,\,\,2.0$, takes on
-  intermediate values.}
-\end{figure}
+In doing so, we found that the trained L2HMC sampler was capable of successfully mixing between modes in a way that
+traditional HMC was not.
 %
-\begin{figure}[htpb]\label{fig:plaq_diff_plots_lf15}
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf15_beta5.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf15_beta5_HMC.eps}
-  %
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf15_beta6.eps}
-  \hfill
-  \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf15_beta6_HMC.eps}
-  \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 15$. As can be seen, the difference $\delta_{\phi_{P}}$
-    varies for different values of $\alpha_Q$.}
-\end{figure}
+Additionally, we looked at the autocorrelation spectra of samples generated from the trained L2HMC sampler compared to
+those obtained from HMC.
+%
+It was observed that the L2HMC sampler was able to produce samples which were noticeably less correlated in far
+fewer steps, indicating that the L2HMC algorithm significantly outperforms traditional HMC.
+%
+In lattice QCD simulations, the ability of a sampler to quickly produce uncorrelated samples is one of the most
+important metrics for measuring its efficiency, and the approach outlined in this chapter shows promise in reducing
+the amount of computational resources required to generate new lattice configurations. 
+
+% and allows us to quantify the improvements achieved by alternative
+% sampling methods.
+
+% gained as we seek-out and
+% identify new met
+% and as we seek-out more efficient sampling methods, this allow
+%
+%
+% an important metric
+% compared this to the autocorrelations of samples obtained from traditional HMC.
+% %
+% I
+%
+%
+% , where it was found that the L2HMC algorithm significantly outperformed generic
+% HMC.
+% %
+%
+% sampling for the case of the two-dimensional Gaussian Mixture Model,\@ as demonstrated by the trained samplers
+% ability to tunnel between
+% modes successfully, as well as the drastic improvement in the autocorrelation spectrum.
+% %
+% All in all, the approach outlined in this chapter shows promise in improving the efficiency of HMC samplers,
+% particularly within the context of lattice gauge theory and lattice QCD.
+%
+It remains to be seen how this algorithm performs when applied to more complicated models (e.g.\ models with fermions
+and non-abelian gauge theories), a direction I plan to investigate more carefully in future research.
+%
+The other, seemingly non-fundamental issue with this approach is the discrepancy between the observed and expected
+value of the average plaquette.
+%
+As of now, I am inclined to believe that this is more of a `bug' than an inherent problem with the algorithm itself.
+
+%
+% In this chapter, we have motivated the successfully introduced  the presented a learned inference architecture that
+% generalizes HMC by augmenting the traditional leapfrog integrator with a set of carefully-chosen functions which are
+% parameterized by weights in a neural network.
+%
+% This system is then trained to maximize the (suitably chosen) `distance' between successive samples, leading to
+%
+%
+% All things considered, being able to efficiently sample from high-dimensional distributions remains at the heart of
+% every MCMC simulation.
+
+MCMC methods have proven to be indispensable in exploring new physics beyond what can be achieved analytically, and has
+significantly advanced our understanding of quantum field theory and quantum chromodynamics.
+%
+% allowing for an independent
+% allowing us to gain insight about mechanisms that would otherwise
+% us insight into the mechanisms driving the behavior of the world around us.
+%
+Unfortunately, in order to both perform and  extract meaningful results from these simulations, tremendous amounts of
+computational resources are required, with cutting-edge simulations being carried out almost exclusively on some of the
+worlds largest supercomputers.
+
+% often calling upon the worlds largest supercomputers.
+%
+% calling upon the worlds largest supercomputers to be carried out.
+%
+Because of this, even minor improvements in efficiency can dramatically reduce the amount of computational power
+required, allowing for increasingly complex models to be studied.
+%
+The pursuit of better, more efficient algorithms is one of the major long-term goals of the lattice community, and is
+directly aligned with many of the goals outlined for high energy physics in the era of exascale computing. 
+%
+In particular, the results of these simulations are of central importance to the experiments being carried out at the
+Relativistic Heavy Ion Collider at Brookhaven National Laboratory (BNL), and the Large Hadron Collider (LHC) at CERN.
+
+% due to the exponential increase in computational resources resulting from the \emph{critical slowing down} as we
+% approach the continuum limit through finer and finer lattice spacings.
+%
+
+
+
+% and the pursuit of better, more efficient algorithms has led to the discovery of new ways of
+% thinking about
+% of the
+% Being able to sample efficiently from high-dimensional distributions remains one of the primary goals
+% simulation.
+%
+% However, for most distributions of interest, exact posterior inference remains intractable and as a result, approximate
+% statistical inference models become necessary.
+%
+
+% One family of such algorithms, Markov Chain Monte Carlo (MCMC), allows us to d
+% One of the most well-known examples of this type of algorithm is
+% Arguably the most well-known and widely used of which being Markov chain Monte Carlo (MCMC) algorithms
+
+
+% lattice gauge theory and lattice QCD, but
+
+% of gauge generation in
+% lattice gauge theory and lattice QCD.
+%
+%
+% generalized the Hamiltonian Monte Carlo algorithm by augmenting the traditional
+% leapfrog integrator with a set of carefully-chosen functions which are parameterized by weights in a neural network.
+%
+% These parameters are trained to encourage fast mixing and convergence to the desired target distribution.
+%
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Systematic Debugging Results}%
+% \label{subsec:debugging_results}
+% In each of the plots below, the L2HMC sampler was trained for $25,000$ steps with a simulated annealing schedule
+% beginning at $\beta = 2.0$ and ending at $\beta = 5.0$.
+% %
+% Additionally, the training was distributed across $16$ nodes on COOLEY using \texttt{horovod}.
+% %
+% The results are averaged over all $N_{\mathrm{samples}}$ samples in the
+% mini-batch.%
+% %
+% \begin{figure}[htpb]\label{fig:plaq_diff_plots_lf5}
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf5_beta5.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf5_beta5_HMC.eps}
+%   %
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf5_beta6.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf5_beta6_HMC.eps}
+%   \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 5$ for $\beta = 5.0$ (top row) and $\beta = 6.0$ (bottom
+%     row). The results from the trained L2HMC (generic HMC) sampler are shown in the left (right) column. As can be seen,
+%     the difference $\delta_{\phi_{P}}$ remains roughly consistent for all values of $\alpha_Q$.}
+% \end{figure}
+% %
+% \begin{figure}[htpb]\label{fig:plaq_diff_plots_lf6}
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf6_beta5.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf6_beta5_HMC.eps}
+%   %
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf6_beta6.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf6_beta6_HMC.eps}
+%   \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 5$ for $\beta = 5.0$ (top row) and $\beta = 6.0$ (bottom
+%     row). The results from the trained L2HMC (generic HMC) sampler are shown in the left (right) column. As can be seen,
+%     the difference $\delta_{\phi_{P}}$ remains roughly consistent for all values of $\alpha_Q$.}
+% \end{figure}
+% %
+% \begin{figure}[htpb]\label{fig:plaq_diff_plots_lf7}
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf7_beta5.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf7_beta5_HMC.eps}
+%   %
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf7_beta6.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf7_beta6_HMC.eps}
+%   \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 7$ As can be seen, the difference $\delta_{\phi_{P}}$ is
+%     noticeably larger for $\alpha_Q = 0.75$, but remains roughly consistent for all other values of $\alpha_Q$.}
+% \end{figure}
+% %
+% \begin{figure}[htpb]\label{fig:plaq_diff_plots_lf8_beta5}
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf8_beta5.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf8_beta5_HMC.eps}
+%   %
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf8_beta6.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf8_beta6_HMC.eps}
+%   \caption{$\plaqdiff$ vs. MD step with $N_{\mathrm{LF}} = 8$. As can be seen, the difference $\delta_{\phi_{P}}$
+%     remains roughly consistent for all values of $\alpha_Q$.}
+% \end{figure}
+% %
+% \begin{figure}[htpb]\label{fig:plaq_diff_plots_lf9}
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf9_beta5.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf9_beta5_HMC.eps}
+%   %
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf9_beta6.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf9_beta6_HMC.eps}
+%   \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 9$. As can be seen, the difference $\delta_{\phi_{P}}$ is
+%   largest for $\alpha_Q = 0.0$ and $\alpha_Q = 0.5$.}
+% \end{figure}
+% %
+% \begin{figure}[htpb]\label{fig:plaq_diff_plots_lf10}
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf10_beta5.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf10_beta5_HMC.eps}
+%   %
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf10_beta6.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf10_beta6_HMC.eps}
+%   \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 10$. As can be seen, the difference $\delta_{\phi_{P}}$ is
+%     smallest for $\alpha_Q = 0.,\,\,0.75$ and largest for $\alpha_Q = 0.25$, while $\alpha_Q = 0.5,\,\,2.0$, takes on
+%   intermediate values.}
+% \end{figure}
+% %
+% \begin{figure}[htpb]\label{fig:plaq_diff_plots_lf15}
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf15_beta5.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf15_beta5_HMC.eps}
+%   %
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf15_beta6.eps}
+%   \hfill
+%   \includegraphics[width=0.49\textwidth]{plaq_difference/plaq_diff_lf15_beta6_HMC.eps}
+%   \caption{$\plaqdiff$ vs MD step with $N_{\mathrm{LF}} = 15$. As can be seen, the difference $\delta_{\phi_{P}}$
+%     varies for different values of $\alpha_Q$.}
+% \end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % I'm currently working on re-running all of the following experiments to see if this difference $\plaqdiff$ is
 % reproducible or if it is some sort of anomaly.
@@ -1601,154 +1393,6 @@ mini-batch.
 % followed by a Metropolis-Hastings accept/reject.
 
 % \include{leapfrog_plots}
-\section{Conclusion}%
-\label{sec:l2hmc_conclusion}
-% ---------------------------------------------------------------------------------------------------------------------
-% In particular, by drawing a series of correlated samples from a well-defined proposal, our collection of samples will
-% converge in distribution to the target equilibrium distribution $\pi$, a technique known as Markov Chain Monte Carlo
-% (MCMC) sampling.
-% %
-% MCMC methods are asymptotically unbiased and remain applicable even in cases when we are not able to sample from $\pi$
-% directly, making them a versatile class of algorithms that are widely used across a variety of scientific disciplines.
-% %
-% While MCMC methods undoubtedly provide an incredibly useful set of tools for
-% ---------------------------------------------------------------------------------------------------------------------
-In conclusion, we have seen how the Hamiltonian Monte Carlo algorithm follows from the Metropolis-Hastings algorithm
-used in generic Markov Chain Monte Carlo methods, and why this approach is often preferred when attempting to sample
-from the high-dimensional distributions characteristic of lattice gauge theory models.
-
-% as well as the possible benefits and downsides of
-% MCMC methods are defined and used in practice to
-Following this, a detailed description of the Hamiltonian Monte Carlo algorithm was presented, as well as some of the
-common issues faced when it is applied to lattice quantum chromodynamics.
-%
-In order to address some of these issues, we then proceeded to introduce a learned inference architecture that
-successfully generalized HMC by augmenting the traditional leapfrog integrator with a set of carefully-chosen functions
-which are parameterized by weights in a neural network.
-%
-This system is then trained to learn a MCMC kernel that encourages fast mixing and convergence to the target
-distribution.
-%
-While this transition kernel is no longer symplectic, we are able to retain the strong theoretical gaurantees of HMC by
-enforcing a tractable MH accept/reject step, making L2HMC potentially capable of sampling from very challenging
-distributions.
-%
-Having introduced the necessary background, we then looked at applying this algorithm to the notoriously difficult
-two-dimensional Gaussian mixture model.
-%
-In doing so, we found that the trained L2HMC sampler was capable of successfully mixing between modes in a way that
-traditional HMC was not.
-%
-Additionally, we looked at the autocorrelation spectra of samples generated from the trained L2HMC sampler compared to
-those obtained from HMC.
-%
-It was observed that the L2HMC sampler was able to produce samples which were noticeably less correlated in far
-fewer steps, indicating that the L2HMC algorithm significantly outperforms traditional HMC.
-%
-In lattice QCD simulations, the ability of a sampler to quickly produce uncorrelated samples is one of the most
-important metrics for measuring its efficiency, and the approach outlined in this chapter shows promise in reducing
-the amount of computational resources required to generate new lattice configurations. 
-
-% and allows us to quantify the improvements achieved by alternative
-% sampling methods.
-
-% gained as we seek-out and
-% identify new met
-% and as we seek-out more efficient sampling methods, this allow
-%
-%
-% an important metric
-% compared this to the autocorrelations of samples obtained from traditional HMC.
-% %
-% I
-%
-%
-% , where it was found that the L2HMC algorithm significantly outperformed generic
-% HMC.
-% %
-%
-% sampling for the case of the two-dimensional Gaussian Mixture Model,\@ as demonstrated by the trained samplers
-% ability to tunnel between
-% modes successfully, as well as the drastic improvement in the autocorrelation spectrum.
-% %
-% All in all, the approach outlined in this chapter shows promise in improving the efficiency of HMC samplers,
-% particularly within the context of lattice gauge theory and lattice QCD.
-%
-It remains to be seen how this algorithm performs when applied to more complicated models (e.g.\ models with fermions
-and non-abelian gauge theories), a direction I plan to investigate more carefully in future research.
-%
-The other, seemingly non-fundamental issue with this approach is the discrepancy between the observed and expected
-value of the average plaquette.
-%
-As of now, I am inclined to believe that this is more of a `bug' than an inherent problem with the algorithm itself.
-
-%
-% In this chapter, we have motivated the successfully introduced  the presented a learned inference architecture that
-% generalizes HMC by augmenting the traditional leapfrog integrator with a set of carefully-chosen functions which are
-% parameterized by weights in a neural network.
-%
-% This system is then trained to maximize the (suitably chosen) `distance' between successive samples, leading to
-%
-%
-% All things considered, being able to efficiently sample from high-dimensional distributions remains at the heart of
-% every MCMC simulation.
-
-MCMC methods have proven to be indispensable in exploring new physics beyond what can be achieved analytically, and has
-significantly advanced our understanding of quantum field theory and quantum chromodynamics.
-%
-% allowing for an independent
-% allowing us to gain insight about mechanisms that would otherwise
-% us insight into the mechanisms driving the behavior of the world around us.
-%
-Unfortunately, in order to both perform and  extract meaningful results from these simulations, tremendous amounts of
-computational resources are required, with cutting-edge simulations being carried out almost exclusively on some of the
-worlds largest supercomputers.
-
-% often calling upon the worlds largest supercomputers.
-%
-% calling upon the worlds largest supercomputers to be carried out.
-%
-Because of this, even minor improvements in efficiency can dramatically reduce the amount of computational power
-required, allowing for increasingly complex models to be studied.
-%
-The pursuit of better, more efficient algorithms is one of the major long-term goals of the lattice community, and is
-directly aligned with many of the goals outlined for high energy physics in the era of exascale computing. 
-%
-In particular, the results of these simulations are of central importance to the experiments being carried out at the
-Relativistic Heavy Ion Collider at Brookhaven National Laboratory (BNL), and the Large Hadron Collider (LHC) at CERN.
-
-% due to the exponential increase in computational resources resulting from the \emph{critical slowing down} as we
-% approach the continuum limit through finer and finer lattice spacings.
-%
-
-
-
-% and the pursuit of better, more efficient algorithms has led to the discovery of new ways of
-% thinking about
-% of the
-% Being able to sample efficiently from high-dimensional distributions remains one of the primary goals
-% simulation.
-%
-% However, for most distributions of interest, exact posterior inference remains intractable and as a result, approximate
-% statistical inference models become necessary.
-%
-
-% One family of such algorithms, Markov Chain Monte Carlo (MCMC), allows us to d
-% One of the most well-known examples of this type of algorithm is
-% Arguably the most well-known and widely used of which being Markov chain Monte Carlo (MCMC) algorithms
-
-
-% lattice gauge theory and lattice QCD, but
-
-% of gauge generation in
-% lattice gauge theory and lattice QCD.
-%
-%
-% generalized the Hamiltonian Monte Carlo algorithm by augmenting the traditional
-% leapfrog integrator with a set of carefully-chosen functions which are parameterized by weights in a neural network.
-%
-% These parameters are trained to encourage fast mixing and convergence to the desired target distribution.
-%
 
 
 %

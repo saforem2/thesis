@@ -1,4 +1,4 @@
-\documentclass[12pt,notitlepage]{report}
+\documentclass[11pt,notitlepage]{report}
 \usepackage{thesis}
 \usepackage{preamble}
 \usepackage{import}
@@ -8,6 +8,7 @@
   {l2hmc_paper/figures/}{figures/}%
   {ising_worm_paper/figures/}{figures/}%
   {machine_learning/figures/}{figures/}%
+  {mcmc/figures/}{figures/}%
 }
 \author{Samuel Foreman}
 
@@ -55,17 +56,17 @@ Thesis Supervisor: \myadvisor%
 % }}}
 %  separate_pages {{{
 %% copyright page %%
-\include{1_copyright}
+% \include{1_copyright}
 %% copyright page %%
 
 \pagenumbering{roman} 
 \setcounter{page}{2}
 %% dedication page %%
-\include{2_dedication}
+% \include{2_dedication}
 %% dedication page %%
 
 %% epigraph page %%
-\include{3_epigraph}
+% \include{3_epigraph}
 %% epigraph page %%
 
 %% ack page %%
@@ -85,14 +86,16 @@ Thesis Supervisor: \myadvisor%
 %% content lists %%
 
 % preface {{{
-\include{8_preface}
+% \include{8_preface}
 % }}}
 
 %% arabic for the rest
 \pagenumbering{arabic}
 % }}}
 
-\begin{doublespace}
+% \begin{doublespace}
+\linespread{1.25}
+% \mathversion{bold}
 
 \chapter{Introduction}%
 \label{chap:introduction}
@@ -106,6 +109,10 @@ Thesis Supervisor: \myadvisor%
 \label{chap:unsupervised_learning}
 \subfile{ising_worm_paper/preising.tex}
 %
+\chapter{Markov Chain Monte Carlo (MCMC)}%
+\label{chap:mcmc}
+\subfile{mcmc/mcmc.tex}
+
 \chapter{Semi-Supervised Learning: L2HMC}%
 \label{chap:semi_supervised_learning}
 \subfile{l2hmc_paper/l2hmc_writeup.tex}
@@ -122,9 +129,22 @@ Thesis Supervisor: \myadvisor%
 
 % \include{source_code/appendix_code}
 % appendix {{{
-\appendix%[heading=bibintoc]
-\chapter{Appendix}
+% \appendix%[heading=bibintoc]
+% \end{doublespace}
+
+\begin{appendix}
+%
+\chapter{Appendix:\@ L2HMC Source Code}%
+\label{chap:l2hmc_source_code}
 \subfile{source_code/appendix_code.tex}
+% \include{source_code/appendix_code.tex}
+% \appendix\
+\chapter{Appendix:\@ Systematic Debugging Results of the Average Plaquette}%
+\label{chap:debugging_results}
+% \include{debugging_results/deubgging_results.tex}
+\subfile{debugging_results/debugging_results.tex}
+%
+\end{appendix}
 % }}}
 
 % references {{{
@@ -133,5 +153,4 @@ Thesis Supervisor: \myadvisor%
 % \printbibliography[title={References}, heading=bibintoc]
 % }}}
 
-\end{doublespace}
 \end{document}

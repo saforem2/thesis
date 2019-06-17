@@ -4,14 +4,254 @@ PUBLIC ABSTRACT
 \mylinespacing
 \end{tightcenter}
 
-Prior to your first thesis deposit, replace this text with the text of your public abstract. The text of this abstract should be double spaced and each new paragraph should be indented. The text may be altered between first and final deposits. This abstract is required for all thesis/dissertations. 
+% In recent years there has been an explosive growth in the fields of machine learning (ML) and data science, a trend
+% that shows no signs of slowing down anytime soon.
+% %
+% Beacuse of this, many researchers have begun looking for new ways to apply these ideas to their fields, resulting in
+% many new cross-disciplinary efforts and collaborations.
+% %
+% % One field that stands to benefit tremedously from this new direction is computational physics, which relies heavily on
+% % data analysis and computer simulations
+% One field in particular that stands to benefit from this new direction is high energy physics, which relies
+% heavily on computational science through the use of data analysis and computer simulations.
+% %
+% Historically, much of this work been done either through the use of `brute-force' calculations, requiring tremendous
+% computational resources, or `by-hand' which tends to be pain-stakingly slow and is often subject to a whole variety
+% of potential issues (e.g.\ incomplete information, poor statistics, incorrect models, unjustified approximations,
+% human-error, etc.).
+% %
+% % In addition, with experiments such as the
+% %
+% Machine learning, on the other hand, aims to sidestep many of these problems entirely by automatically `learning'
+% information from data, and is capable of discovering meaningful patterns that are oftentimes imperceivable to humans.
+% %
+% With projects such as the Large Hadron Collider at CERN producing roughly $15$ petabytes of data per year, the need for
+% new and better methods for dealing with this data continues to grow.
+% 
+In recent years there has been a growing interest in expanding the scientific applications of machine learning.
+%
+In this work we will explore two specific examples of how lattice gauge theory stands to benefit from these new
+developments.
+%
+Lattice gauge theory is a sub-discipline of high energy physics that makes heavy use of computer simulations to test
+existing models and generate new results.
+% In this work we look at how machine learning can be used to benefit lattice gauge theory, a sub-discipline of high
+% energy physics that makes heavy use of computer simulations to test existing models and to generate new results.
+%
+% In this work we look at two specific examples showing how lattice gauge theory can benefit from developments in
+% machine learning, and, a sub-discipline of high energy physics that makes heavy use of computer simulations to test
+% existing models and generate new results.
+%
+In order to perform these simulations, spacetime is discretized as a `lattice' whose behavior can then be controlled
+using the laws of physics.
+% , which makes heavy use of computer simulations to better understand the laws of physics.
+% %
+% In order to perform these simulations, spacetime is discretized as a `lattice' whose behavior is then controlled using
+% the
+% that is governed by the
+% in which the laws of physics are explored by running computer simulations on a discretized version
+% of spacetime (i.e.\  the `lattice') and then analyzing the results.
+% by running computer simulations governed by the fundamentaand analyzing the results.
+% the most fundamental, microscopic of levels (i.e.\ a
+% `quantum lattice')
+% by running computer simulations and analyzing the results.
 
-The public abstract is to be placed at this point in your first and final deposit and submitted via webform at final deposit. This abstract may be up to 250 words and should be written for a non-academic lay audience. In writing your public abstract, avoid jargon and technical language as much as possible. 
+We begin by introducing a new technique that is capable of extracting information about a physical system by `looking'
+at pictures of the system at different temperatures, and provide an analytical framework that explains how this is done
+behind the scenes.
+% why the technique
+% succeeds in this particular case.
+%
+This result demonstrates that our approach is capable of learning non-trivial information about the system without
+being told explicitly how to do so, and without having to provide any information about the underlying physics.
+%
+% We then discuss other types of problems in which this technique may prove useful, and include possible directions for
+% future research.
 
-The ability to communicate research simply and clearly is an important skill when interviewing for faculty positions, as well as for positions in industry and alt-ac sectors. The public abstract helps convey ideas beyond one’s immediate academic circle, facilitating communication with colleagues who do different kinds of work and possess different dimensions of training.
+Next, we look at how machine learning can be used to improve the efficiency of the \emph{Hamiltonian Monte Carlo} (HMC)
+algorithm, a widely used technique in lattice gauge theory for generating \emph{gauge configurations}.
+%
+These gauge configurations are essentially `snapshots' of the spacetime lattice, and are used to make predictions
+about quantum theory.
 
-Think of your public abstract as your “elevator pitch” or what you might tell someone who asks, “What is your thesis about?” You may only have a few minutes to explain it to them while keeping their attention and using terminology you are sure they will understand without further lengthy explanation.
+% .\footnote{These
+% \emph{gauge configurations} can be thought of as `snapshots' of the lattice, which once generated, can then be used to
+% test and make new predictions about our current theories.}
+% The second main idea presented in this thesis looks at using machine learning to improve the efficiency of the most
+% commonly used technique for generating
+% \emph{gauge configurations}.\footnote{These \emph{gauge
+% configurations} can be thought of as `snapshots' of the lattice, which once generated, can then be used to test and
+% make new predictions about our current theories.}
+%
+Currently, these configurations are generated via \emph{Hamiltonian Monte Carlo simulations}, an algorithm that uses 
+what amounts to a `guess and check' strategy and can be summarized as follows:
+%
+\begin{enumerate}
+  \item Start with a random configuration.
+  \item Propose a new configuration by modifying the current configuration in a way that seems promising.
+  \item Check if this new configuration is better than the previous one. If so, we accept it and proceed, otherwise, we
+    return to the previous configuration and try again.
+\end{enumerate}
+%
+The amount by which our current configuration is modified is called the \emph{step size}, a parameter which is
+(typically) fixed for the duration of the simulation.
+%
+We can improve the likelihood of accepting a new configuration by using a smaller step size, but this leads to
+configurations that are highly correlated with each other, which is undesirable.
+% but this causes subsequent
+% configurations to be highly correlated which is undesirable.
+%
+Alternatively, we can take larger steps to reduce correlations, but this causes more of the proposed configurations to
+be rejected.
+% Alternatively, we can take larger steps to reduce correlations, but this causes more of the proposed configurations to
+% be rejected.
+%
+Immediately we see that computational resources are being wasted each time we propose a new configuration that gets
+rejected, and is a major source of inefficiency in the algorithm.
+% isn't accepted, and is a major source of inefficiency in our algorithm.
 
-Another way to think of your public abstract is like the description you would read on the inside of a book cover.
+The approach presented in this work attempts to combat this issue by using machine learning to reduce the number of
+wasted calculations.
+%
+Explicitly, this is done by training the algorithm to better identify those modifications which produce better
+configurations, while simultaneously optimizing the step size to be as large as possible while maintaining a high
+probability of accepting new configurations.
+% to take as large of steps as possible (thereby reducing
+% correlations), while maintaining an acceptable probability of acceptance.
+% without dramatically reducing the probability of rejection.
+%
+In doing so, we are able to reduce the number of unnecessary calculations that don't produce new configurations,
+thereby improving the efficiency of the algorithm as a whole.
+% consequently improving the efficiency of the algorithm as a whole.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Currently, these configurations are generated via \emph{Hamiltonian Monte Carlo (HMC) simulations}, an algorithm that
+% allows us to explore the set of gauge configurations which are `permitted' by physics.
+% %
+% This is done by starting from some random allowed configuration and `walking' around to try and find new, `better'
+% configurations.
+% %
+% The process of `walking' around this space consists of taking a step (of some predefined size) in a direction where it
+% is believed that a better configuration might exist, and then checking to see if it is in fact `better', and if so we
+% accept it, otherwise we go back to where we were and try again.
+% %
+% Immediately  we can see that computational resources are being wasted each time we take a step in a direction that
+% doesn't give us a better configuration, and is a major source of inefficiency in our algorithm.
+%
+% In addition, this technique suffers from a phenomenon known as \emph{critical slowing down}, in which the amount of
+% computational resources required to generate new, independent configurations grows exponentially as we look at nature
+% on smaller and smaller scales.
+% %
+% The approach presented in this paper attempts to combat this issue by using machine learning to explore this space in a
+% more efficient manner.
+% %
+% Explicitly, this is done by training our `walking algorithm' to do two things:
+% \begin{enumerate}
+%   \item More accurately identify the directions in which better configurations exist, and
+%   \item learning to take the optimal step size in this direction.
+% \end{enumerate}
+% %
+% In doing so, we are able to reduce the number of unnecessary calculations which don't produce better configurations,
+% consequently improving the efficiency of the algorithm as a whole.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% the space in which these allowable
+% configurations exist, taking steps in directions that seem promising, and then checking to see if the configuration
+% located at this new location is: (1.)
+% %
+% Explicitly, we can train the `walking algorithm' to better identify the directions in which better configurations exist
+%
+% Explicitly, we attempt to train this `walking algorithm' to better identify
+% The main idea behind this new approach is to use ML to `better explore' the set of allowable configurations by taking
+% larger steps in
+%
+%
+% The main idea behind this technique is to use machine learning to improve explore the set of allowable
+% configurations.
+% %
+%
+
+
+% essence, is a set of tools used to explore how nature behaves at the most microscopic of levels through the use of
+% computer simulations.
+% understood as as a set of computational tools that are
+% under
+% new, more efficient tools for dealing with this data is becoming increasingly important.
+%
+% It is this ability to discover new information from existing data that makes
+% would otherwise remain unnoticed.
+% removing the need for users to explicitly incorp information about the problem at hand.
+%
+
+% explicit information to be about the problem at hand
+% removing the need for explicit inclusion of information about the problem at hand.
+% removing the need to explicitly include information about the problem ast
+% the problem at hand, removing the need for explicit information about
+% As an example, virtually all recommendation engines are generated using machine learning,
+
+% and has shown success in uncovering new ideas tha
+% removing the need to explicitly include domain-level information about the
+% % Machine learning, on the other hand, succeeds
+% Machine learning, on the other hand, has found success in sidestepping these issues entirely.
+% sidesteps these issues entirely by removing the need for `human-error'
+% Machine learning, on the other hand,
+% By applying ideas from machine learning to these types of problems, these two fundamental
+
+
+
+
+% stands to benefit tremendously from this new direction, the effects of which we
+% are only just beginning to realize.
+% %
+% One specific area of computational physics, lattice g
+% % In particular, computational physics has benefitted tremendously from these new advancements,
+% In particular, computational physics stands to benefit tremendously from these new advancements, and we are only just
+% beginning to
+% % With computational physics relying so heavily on data analysis and computer simulations, there has been
+% With computational physics relying so heavily on the use of computer simulations and data analysis, it
+% particular
+%
+% with those whose
+% work relies heavily on computation standing t
+% heavily on computational
+% %
+% % As a result, many researchers have been looking for new ways to apply these ideas to their fields, and
+% %
+% % Beacause of this, many researchers have started to look for new ways to apply these ideas to their fields, resulting in
+% % an increased emphasis on cross-disciplinary
+% % collaborative collaboration across scientific disciplines and pushing interdisciplinary research to new levels.
+% % interdisciplinary
+% % This, coupled with the pervasiveness of computational science across all scientific disciplines,
+% % With so many scientific disciplines relying heavily on computational
+% % With so many scientific disciplines
+% % As more and more scientific disciplines be
+% % As of computer simulations and
+% % Since so many scientific disciplines these days rely
+% As a result, virtually any scientific discipline that uses computational science
+% relies heavily on computer simulations stands to benefit
+% tremendously from these new developments
+% As a result, many researchers have been looking for new ways to apply these ideas to their fields, and computational
+% physics has emerged as one of the largest early adopters.
+%
+% In recent years there has been a growing interest in applying ideas from machine learning to computational problems in
+% lattice gauge theory and lattice QCD.
+
+% Prior to your first thesis deposit, replace this text with the text of your public abstract. The text of this
+% abstract should be double spaced and each new paragraph should be indented. The text may be altered between first and
+% final deposits. This abstract is required for all thesis/dissertations.
+%
+% The public abstract is to be placed at this point in your first and final deposit and submitted via webform at final
+% deposit. This abstract may be up to 250 words and should be written for a non-academic lay audience. In writing your
+% public abstract, avoid jargon and technical language as much as possible.
+%
+% The ability to communicate research simply and clearly is an important skill when interviewing for faculty positions,
+% as well as for positions in industry and alt-ac sectors. The public abstract helps convey ideas beyond one’s
+% immediate academic circle, facilitating communication with colleagues who do different kinds of work and possess
+% different dimensions of training.
+%
+% Think of your public abstract as your “elevator pitch” or what you might tell someone who asks, “What is your thesis
+% about?” You may only have a few minutes to explain it to them while keeping their attention and using terminology you
+% are sure they will understand without further lengthy explanation.
+%
+% Another way to think of your public abstract is like the description you would read on the inside of a book cover.
 
 \end{doublespace}
