@@ -34,19 +34,28 @@ archivePrefix = "arXiv",
   adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
-@ARTICLE{Beny,
-   author = {{B{\'e}ny}, C.},
-    title = "{Deep learning and the renormalization group}",
-  journal = {arXiv e-prints},
-archivePrefix = "arXiv",
-   eprint = {1301.3124},
- primaryClass = "quant-ph",
- keywords = {Quantum Physics},
-     year = 2013,
-    month = jan,
-   adsurl = {https://ui.adsabs.harvard.edu/abs/2013arXiv1301.3124B},
-  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@article{Beny,
+ title={Deep learning and the renormalization group},
+ url={http://arxiv.org/abs/1301.3124},
+ abstractNote={Renormalization group (RG) methods,
+ which model the way in which the effective behavior of a system depends on the
+scale at which it is observed, are key to modern condensed-matter theory and
+particle physics. We compare the ideas behind the RG on the one hand and deep
+machine learning on the other, where depth and scale play a similar role.  In
+order to illustrate this connection, we review a recent numerical method based
+on the RG—the multiscale entanglement renormalization ansatz (MERA)—and show
+how it can be converted into a learning algorithm based on a generative
+hierarchical Bayesian network model. Under the assumption—common in
+physics—that the distribution to be learned is fully characterized by local
+correlations, this algorithm involves only explicit evaluation of
+probabilities, hence doing away with sampling.},
+ note={arXiv: 1301.3124},
+ journal={arXiv:1301.3124 [quant-ph]},
+ author={Bény, Cédric},
+ year={2013},
+ month={Jan} 
 }
+
 
 @INPROCEEDINGS{LattProc,
    author = {{Foreman}, S. and {Giedt}, J. and {Meurice}, Y. and {Unmuth-Yockey}, J.
@@ -67,18 +76,32 @@ archivePrefix = "arXiv",
   adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
-@ARTICLE{MehtaSchwab,
-   author = {{Mehta}, P. and {Schwab}, D.~J.},
-    title = "{An exact mapping between the Variational Renormalization Group and Deep Learning}",
-  journal = {arXiv e-prints},
-archivePrefix = "arXiv",
-   eprint = {1410.3831},
- primaryClass = "stat.ML",
- keywords = {Statistics - Machine Learning, Condensed Matter - Statistical Mechanics, Computer Science - Machine Learning, Computer Science - Neural and Evolutionary Computing},
-     year = 2014,
-    month = oct,
-   adsurl = {https://ui.adsabs.harvard.edu/abs/2014arXiv1410.3831M},
-  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@article{MehtaSchwab,
+ title={An exact mapping between the Variational Renormalization Group and Deep
+	Learning},
+ url={http://arxiv.org/abs/1410.3831},
+ abstractNote={Deep learning is a broad set of techniques that uses multiple
+layers of representation to automatically learn relevant features directly from
+structured data. Recently, such techniques have yielded record-breaking results
+on a diverse set of difficult machine learning tasks in computer vision, speech
+recognition, and natural language processing.  Despite the enormous success of
+deep learning, relatively little is understood theoretically about why these
+techniques are so successful at feature learning and compression.  Here, we
+show that deep learning is intimately related to one of the most important and
+successful techniques in theoretical physics, the renormalization group (RG).
+RG is an iterative coarse-graining scheme that allows for the extraction of
+relevant features (i.e. operators) as a physical system is examined at
+different length scales. We construct an exact mapping from the variational
+renormalization group, first introduced by Kadanoff, and deep learning
+architectures based on Restricted Boltzmann Machines (RBMs). We illustrate
+these ideas using the nearest-neighbor Ising Model in one and two-dimensions.
+Our results suggests that deep learning algorithms may be employing a
+generalized RG-like scheme to learn relevant features from data.},
+ note={arXiv: 1410.3831},
+ journal={arXiv:1410.3831 [cond-mat, stat]},
+  author={Mehta, Pankaj and Schwab, David J.},
+ year={2014},
+ month={Oct} 
 }
 
 @Article{BraddeBialek,
@@ -128,14 +151,32 @@ archivePrefix = "arXiv",
   url = {https://link.aps.org/doi/10.1103/PhysRevB.94.195105}
 }
 
-@inproceedings{foreman2017,
-  title={RG-inspired machine learning for lattice field theory},
-  author={Foreman, Sam and Giedt, Joel and Meurice, Yannick and Unmuth-Yockey, Judah},
-  booktitle={EPJ Web of Conferences},
+@article{foreman2017,
+ title={RG-inspired machine learning for lattice field theory},
   volume={175},
-  pages={11025},
-  year={2018},
-  organization={EDP Sciences}
+ ISSN={2100-014X},
+ DOI={10.1051/epjconf/201817511025},
+ abstractNote={Machine learning has been a fast growing ﬁeld of research in
+                several areas dealing with large datasets. We report recent
+                attempts to use renormalization group (RG) ideas in the context
+                of machine learning. We examine coarse graining procedures for
+                perceptron models designed to identify the digits of the MNIST
+                data. We discuss the correspondence between principal
+                components analysis (PCA) and RG ﬂows across the transition for
+                worm conﬁgurations of the 2D Ising model. Preliminary results
+                regarding the logarithmic divergence of the leading PCA
+                eigenvalue were presented at the conference. More generally, we
+                discuss the relationship between PCA and observables in Monte
+                Carlo simulations and the possibility of reducing the number of
+                learning parameters in supervised learning based on RG inspired
+                hierarchical ansatzes.},
+ journal={EPJ Web of Conferences},
+ author={Foreman, Sam and Giedt, Joel and Meurice, Yannick and Unmuth-Yockey,
+		Judah},
+ editor={Della Morte, M. and Fritzsch, P. and Gámiz Sánchez, E. and Pena Ruano,
+	 C.Editors},
+ year={2018},
+ pages={11025} 
 }
 
 @article{PhysRev.185.832,
@@ -192,14 +233,6 @@ archivePrefix = "arXiv",
   publisher = {American Physical Society},
   doi = {10.1103/PhysRevLett.87.160601},
   url = {https://link.aps.org/doi/10.1103/PhysRevLett.87.160601}
-}
-
-@book{Bishop,
-  author="Bishop, Christopher M.",
-  title="Pattern recognition and machine learning",
-  publisher="Springer",
-  year="2006",
-  address="New York"
 }
 
 @article{Liu:2013nsa,

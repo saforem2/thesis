@@ -8,128 +8,172 @@
 % \label{sec:l2hmc_mcmc}
 For consistency with the original paper, we adopt much of the same notation.
 %
-In order to better understand the theory behind the L2HMC algorithm, we begin with a general description of Markov
-Chain Monte Carlo (MCMC) methods.
+In order to better understand the theory behind the L2HMC algorithm, we begin
+with a general description of Markov Chain Monte Carlo (MCMC) methods.
 %
 % \subsection{Markov Chains}
 \section{Markov Chains}
-Generally speaking, MCMC methods are a class of algorithms that use Markov Chains to sample from a particular
-probability distribution that is often too complicated to sample from directly.
+Generally speaking, MCMC methods are a class of algorithms that use Markov
+Chains to sample from a particular probability distribution that is often too
+complicated to sample from directly.
 %
-These algorithms are of tremendous importance in a wide variety of fields and are of particular importance for
-simulations in lattice quantum chromodynamics (QCD) and lattice gauge theory.
+These algorithms are of tremendous importance in a wide variety of fields and
+are of particular importance for simulations in lattice quantum chromodynamics
+(QCD) and lattice gauge theory.
 %
-A Markov chain can be understood as a sequence of random variables ${\{x_1, x_2, \ldots, x_T\}}$ sampled from a
-conditional probability distribution $p{(x_{t+1}|x_t)}$, with the condition that the next sample $x_{t+1}$ depends only
-on the current state $x_t$ and does not depend on the history of previous states ${\{x_1, x_2, \ldots,
-x_{t-1}\}}$~\cite{brooks2011handbook}.
+A Markov chain can be understood as a sequence of random variables ${\{x_1,
+x_2, \ldots, x_N\}}$ sampled from a conditional probability distribution
+$p{(x_{t+1}|x_t)}$, with the condition that the next sample $x_{t+1}$ depends
+only on the current state $x_t$ and does not depend on the history of previous
+states ${\{x_1, x_2, \ldots, x_{t-1}\}}$~\cite{brooks2011handbook}.
 %
-The set in which the $x_i$ take values is often referred to as the state space $\mathbb{S}$ of the Markov chain.
+The set in which the $x_i$ take values is often referred to as the \emph{state
+space} $\mathcal{X}$ of the Markov chain.
 %
-For finite state spaces, the initial distribution can be associated with a vector $\lambda= {(\lambda_1, \ldots,
-\lambda_n)}$ defined by
+For finite state spaces, the initial distribution can be associated with a
+vector $\lambda= {(\lambda_1, \ldots, \lambda_N)}$ defined by
 %
 \begin{equation}
-  p(x_1 = x_i) = \lambda_i, \quad i = 1, \ldots, n
+  p(x_1 = x_i) = \lambda_i, \quad i = 1, \ldots, N
 \end{equation}
 %
-and the transition probabilities can be associated with a transition matrix (kernel) $K$ with elements $k_{ij}$ given
-by \begin{equation}
-  p(x_{t+1} = x_j | x_t = x_i) = k_{ij}, \quad i = 1, \ldots, n \,\, j = 1, \ldots n
-\end{equation}
-This says that the ${(i, j)}^{\mathrm{th}}$ entry of the $n^{\mathrm{th}}$ power of $K$ gives the probability of
-transitioning from state $i$ to state $j$ in $n$ steps.
+and the transition probabilities can be associated with a transition matrix
+(kernel) $P$ with elements $p_{ij}$ given by 
+\begin{equation}
+  p(x_{t+1} = x_j | x_t = x_i) = p_{ij}, \quad i = 1, \ldots, N \,\, j = 1,
+\ldots n \end{equation}
+This says that the ${(i, j)}^{\mathrm{th}}$ entry of the $n^{\mathrm{th}}$
+power of $P$ gives the probability of transitioning from state $i$ to state $j$
+in $n$ steps.
 %
-For our purposes, we are usually interested in Markov chains that have stationary transition probabilities, i.e.\ the
-conditional distribution of $x_{t+1}$ given $x_t$ does not depend on $t$. Note that for $i = 1, 2, \ldots, N$,
+For our purposes, we are usually interested in Markov chains that have
+stationary transition probabilities, i.e.\ the conditional distribution of
+$x_{t+1}$ given $x_t$ does not depend on $t$. Note that for $i = 1, 2, \ldots,
+N$,
 \begin{equation}
   \sum_{j=1}^{N} p_{ij} = 1.
 \end{equation}
 
-There are two main (defining) properties of Markov chains that are relevant for our discussion, namely
-\emph{stationarity} and \emph{reversibility}.
+There are two main (defining) properties of Markov chains that are relevant for
+our discussion, namely \emph{stationarity} and \emph{reversibility}.
 %
 \begin{itemize}
-  \item \textbf{Stationarity:} A sequence $\{x_1, x_2, \ldots, x_n\}$ of random elements is said to be
-    \emph{stationary} if for every positive integer $k$ the distribution of the $k$-tuple
+  \item \textbf{Stationarity:} A sequence $\{x_1, x_2, \ldots, x_N\}$ of random
+    elements is said to be \emph{stationary} if for every positive integer $k$
+    the distribution of the $k$-tuple
     \begin{equation*}
       (x_{t+1}, \ldots, x_{t+k})
     \end{equation*}
-    does not depend on $t$. An initial distribution is said to be stationary if the Markov chain specified by the
-    initial distribution and transition probability distribution is stationary. 
-  \item \textbf{Reversibility:} A Markov chain is said to be reversible if its transition probability is reversible
-    with respect to its initial distribution. Note that this is a stronger condition than \emph{stationarity} since if
-    a Markov chain is reversible it is also stationary. This condition can be better understood by noticing that for
-    any $i, k  > 0 \in \mathbb{Z}$, the distributions of $(x_{i+1}, \ldots, x_{i+k})$ and $(x_{i+k}, \ldots x_{i+1})$
-    are the same.
+    does not depend on $t$. An initial distribution is said to be stationary if
+    the Markov chain specified by the initial distribution and transition
+    probability distribution is stationary. 
+  \item \textbf{Reversibility:} A Markov chain is said to be reversible if its
+    transition probability is reversible with respect to its initial
+    distribution. Note that this is a stronger condition than
+    \emph{stationarity} since if a Markov chain is reversible it is also
+    stationary. This condition can be better understood by noticing that for
+    any $i, k  > 0 \in \mathbb{Z}$, the distributions of $(x_{i+1}, \ldots,
+    x_{i+k})$ and $(x_{i+k}, \ldots x_{i+1})$ are the same.
 \end{itemize}
 %
 Additionally, we often desire that our Markov chain is
 \begin{itemize}
-  \item \textbf{Irreducible:} For any state of the Markov chain, there is a positive probability of visiting all other
-    states, i.e.\ any two configurations are connected by a finite number of steps..
-     % For all states $i$, $j$, there exists a $k$ such that ${(T^{k})}_{i,j} \neq 0$.
-  \item \textbf{Aperiodic:} The \emph{period} of a configuration $\{x\}$ is given by the greatest common divisor of
-    possible numbers of steps to come back to itself. When the period is $1$ for all configurations, the Markov chain
-    is said to be aperiodic.
-    % There is a positive probability that the chain remains in the current state, i.e.\ %
-    % $p{(x_t = x_{t-1})} > 0$.
-    % For all states $i$, $j$, $\gcd\{k\,:\,{(T^{k})}_{i, j} > 0\} = 1$.
+  \item \textbf{Irreducible:} For any state of the Markov chain, there is a
+    positive probability of visiting all other states, i.e.\ any two
+    configurations are connected by a finite number of steps..
+     % For all states $i$, $A$, there exists a $k$ such that ${(T^{k})}_{i,j} \neq 0$.
+  \item \textbf{Aperiodic:} The chain will not tend towards a periodic
+    limit-cycle where we can only reach a certain subset of states at any step,
+    i.e.\ we must be able to reach all states at any given time
+    step~\cite{scribeno74:online}.
+%
 \end{itemize}
-If a (finite) chain satisfies both of these properties, it will always have a unique stationary distribution.
+More formally, if we define the \emph{period} of a state $x \in \mathcal{X}$
+to be:
+%
+\begin{equation}
+  d(x) = \gcd\{n \in \mathbb{N}^{+} : P^{n}(x, x) > 0\},
+\end{equation}
+%
+then, starting at $x$, the chain can return to $x$ only at multiples of the
+period $d$, where $d$ is the largest such integer. We say that $x$ is
+\emph{aperiodic} if $d(x) = 1$ and \emph{periodic} if $d(x) > 1$.
+
+If a (finite) chain satisfies both of these properties, it will always have a
+unique stationary distribution.
+  % \item \textbf{Aperiodic:} Define the \emph{period} of a configuration $\{x\}$
+  %   is given by the greatest common divisor of possible numbers of steps to
+  %   come back to itself. When the period is $1$ for all configurations, the
+  %   Markov chain is said to be aperiodic.
+    % There is a positive probability that the chain remains in the current
+    % state, i.e.\ % $p{(x_t = x_{t-1})} > 0$.
+    % For all states $i$, $j$, $\gcd\{k\,:\,{(T^{k})}_{i, j} > 0\} = 1$.
 
 %
-% Consequently, an irreducible, aperiodic Markov chain must have a unique distribution $\pi = (\pi_1, \pi_2, \ldots,
-% \pi_N)$ on the state space $\mathbb{S}$ ($\pi_i \equiv$ probability of state $i$) with the property
+% Consequently, an irreducible, aperiodic Markov chain must have a unique
+% distribution $\pi = (\pi_1, \pi_2, \ldots, \pi_N)$ on the state space
+% $\mathbb{S}$ ($\pi_i \equiv$ probability of state $i$) with the property
 % that~\cite{richey2010evolution}
 % \begin{equation}
 %   \pi = \pi T
 % \end{equation}
 % %
-% In which case, we say that $\pi$ is the \emph{stable distribution} of the Markov chain.
-% %
-% Note that because of this, if $\pi$ is the stable distribution for an irreducible, aperiodic Markov chain, then we can
-% use the Markov chain to sample from $\pi$.
+% In which case, we say that $\pi$ is the \emph{stable distribution} of the
+% Markov chain.  %
+% Note that because of this, if $\pi$ is the stable distribution for an
+% irreducible, aperiodic Markov chain, then we can use the Markov chain to
+% sample from $\pi$.
 %
-% In particular, to obtain a sample select $s_1 \in \mathbb{S}$ arbitrarily. Then for any $k > 1$, if $s_{k - 1} = i$,
-% select $s_k = j$ with probability $t_{ij}$. The resulting sequence $s_1, s_2, \ldots$ has the useful property that as
-% $N \rightarrow \infty$,
+% In particular, to obtain a sample select $s_1 \in \mathbb{S}$ arbitrarily.
+% Then for any $k > 1$, if $s_{k - 1} = i$, select $s_k = j$ with probability
+% $t_{ij}$. The resulting sequence $s_1, s_2, \ldots$ has the useful property
+% that as $N \rightarrow \infty$,
 % \begin{equation}
 %   \frac{|\{k\, :\, k \leq N \,\,\text{and}\,\, s_k = j\}|}{N} \rightarrow \pi_j
 % \end{equation}
 % with probability one.
 %
 \subsection{Metropolis-Hastings algorithm}
-The purpose of the Metropolis-Hastings algorithm is to generate a collection of states according to a desired
-distribution $p(x)$.
+The purpose of the Metropolis-Hastings algorithm is to generate a collection of
+states according to a desired distribution $p(x)$.
 %
-More formally, let $p$ be the target distribution defined up to a constant over a space $\mathcal{X}$.
+More formally, let $p$ be the target distribution defined up to a constant over
+a space $\mathcal{X}$.
 %
-We wish to construct a Markov Chain with stationary distribution equal to the target distribution $p$.
+We wish to construct a Markov Chain with stationary distribution equal to the
+target distribution $p$.
 %
 We can obtain samples by simulating a Markov process.
 %
-Given an initial distribution $\pi_0$ and a transition kernel $K$, we construct the following sequence of random
-variables
+Given an initial distribution $\pi_0$ and a transition matrix (kernel) $K$, we
+construct the following sequence of random variables
 %
 \begin{equation}
   X_0 \sim \pi_0, \quad X_{t+1} \sim K(\cdot|X_t).
 \end{equation}
 %
-As discussed previously, for $p$ to be the stationary distribution of the chain, $K$ must be irreducible and aperiodic,
-and $p$ has to be a \emph{fixed point} of K. Note we can express the fixed point condition as 
+As discussed previously, for $p$ to be the stationary distribution of the
+chain, $K$ must be irreducible and aperiodic, and $p$ has to be a \emph{fixed
+point} of K. Note we can express the fixed point condition as 
 %
 \begin{equation}
   p(\xp) = \int K(\xp | x) p(x) dx
 \end{equation}
 %
-The stationarity condition is often satisfied by ensuring the (stronger) \emph{detailed balance condition}
+We can ensure that stationarity is satisfied by requiring the (stronger)
+\emph{detailed balance condition}\footnote{Note that this is equivalent to the
+reversibility condition defined above.}
 %
 \begin{equation}
   p{(\xp)} K{(x|\xp)} = p{(x)} K{(\xp|x)}.
 \end{equation}
 %
-Note that we can rewrite the detailed balance condition as 
+% which, by definition, guarantees
+% which is equivalent to the previously defined reversibility condition.
+% Note that the detailed balance condition, by definition, is equivalent to
+% Note that a chain satisfying this condition is also reversible.
+%
+We can rewrite the detailed balance condition as 
 %
 \begin{equation}
   \frac{K{(\xp | x)}}{K(x | \xp)} = \frac{p(\xp)}{p(x)}
@@ -139,7 +183,6 @@ Given a proposal distribution $q{(x^{\prime}|x)}$, we can construct a transition
 using Metropolis-Hastings accept/reject rules, as outlined in Alg.~\ref{alg:metropolis_hastings}.
 %
 \begin{algorithm}[htpb]%
-\label{alg:metropolis_hastings}
   \SetKwProg{Fn}{def}{\string:}{}%
   \SetKwFunction{Range}{range}%
   \SetKwFor{For}{for}{\string:}{}%
@@ -155,19 +198,23 @@ using Metropolis-Hastings accept/reject rules, as outlined in Alg.~\ref{alg:metr
     Sample $\xp \sim q(\cdot | x_t)$\;
     Compute the acceptance probability: 
     $A(\xp | x_t) = \min\left(1, \frac{p(\xp)q(x_t | \xp)}{p(x_t)q(\xp | x_t)}\right)$\;
-    With probability $A$ accept the proposed value and set $x_{t+1} = \xp$. Otherwise set $x_{t+1} = x$.
+    With probability $A$ accept the proposed value and set $x_{t+1} = \xp$.
+    Otherwise set $x_{t+1} = x_{t}$.
   }%
+\label{alg:metropolis_hastings}
 \end{algorithm}
-%
-In practice, a Gaussian distribution is often used as the proposal distribution, i.e.\ $q(\xp | x) = \mathcal{N}(\xp |
-x, \Sigma)$. In this case the acceptance probability reduces to
+
+In practice, a Gaussian distribution is often used as the proposal
+distribution, i.e.\ $q(\xp | x) = \mathcal{N}(\xp | x, \Sigma)$. In this case
+the acceptance probability reduces to
 %
 \begin{equation}
   A(\xp | x) = \min\left(1, \frac{p(\xp)}{p(x)}\right).
 \end{equation}
 %
-This ``random walk'' approach is conceptually simple and can be easily implemented but performs poorly for
-the high-dimensional target distributions commonly encountered in lattice gauge theory and lattice QCD.
+This ``random walk'' approach is conceptually simple and can be easily
+implemented but performs poorly for the high-dimensional target distributions
+commonly encountered in lattice gauge theory and lattice QCD.
 %
 % This is done using a Markov process which asymptotically reaches the unique stationary
 % distribution $pi(x)$ such that $\pi(x) = p(x)$.
@@ -182,33 +229,48 @@ the high-dimensional target distributions commonly encountered in lattice gauge 
 %
 \section{Aside: Bayesian Analysis}
 %
-While not directly relevant to our discussion, it is interesting to note the connection between MCMC and Bayesian
-analysis, which has applications in a wide range of disciplines outside of physics~\cite{mcmc_for_dummies}.
+While not directly relevant to our discussion, it is interesting to note the
+connection between MCMC and Bayesian analysis, which has applications in a wide
+range of disciplines outside of physics~\cite{Hanada_2018}.
 %
 Recall Bayes' theorem:
 %
 \begin{equation}
-  p(B_{i}|A) = \frac{p(A|B_{i}) p(B_{i})}{\sum_{j} p(A|B_{j}) p(B_{j})}
+  % P(A_{i}| B) = \frac{P(B | A_{i})}{\sum_{j} P(B | A_{j}) P(A_{j})}
+  P(B_{i}|A) = \frac{P(A|B_{i})P(B_{i})}{\sum_{j}P(A|B_{j})P(B_{j})}
   \label{eq:bayes_theorem}
 \end{equation}
 %
-Here, $p(A|B)$ is the conditional probability of $A$ given $B$.
+Here, $p(A|B)$ is the conditional probability of $A$ given $B$, i.e.\ the
+probability that $A$ is true when the condition $B$ is satisfied. 
 %
-Suppose $p(A|B_{i})$ and $p(B_{i})$ are given and we want to derive $p(B_{i}|A)$.
+For example, suppose we are interested in determining if an email is as spam.
+The test for spam is that the message contains some flagged words $B_{i}$, i.e.
+$B_{1} =$ `winner', $B_{2}=$ `Nigerian prince', etc.
 %
-We can identify $B_{j}$ and $p(A|B_{j}) p(B_{j})$ with the value of some field $\phi$, and the path integral weight
-$e^{-S[\phi]}[d\phi]$ respectively.
+In this case, $p(A|B_{i})$ would then be the probability that the email is
+spam, given that it contains the word $B_{i}$.
 %
-The denominator $\sum_{j} p(A|B_{j}) p(B_{j}) = p(A)$ is regarded as the partition function $Z$.
+Suppose $p(A|B_{i})$ and $p(B_{i})$ are given (e.g.\ $P(A|B_{1}) = 10^{-4},
+P(A|B_{2}) = 0.05, \ldots$) and we want to derive $p(B_{i}|A)$, the probability
+of an email containing the word $B_{i}$, given that it was classified as spam.
 %
-Then, we can use MCMC to obtain $p(B_{i}|A) \sim \frac{e^{-S[\phi]}[d\phi]}{Z}$ via Bayes' theorem, i.e.\ we can
-collect many samples and see the distribution.
+To use an analogy from physics, we can identify $B_{i}$ with some field $\phi$,
+and $p(A|B_{i}) p(B_{i})$ with the path integral weight $e^{-S[\phi]}[d\phi]$.
 %
-Moreover, if we know $f(B_{i} \equiv p(C|B_{i})$, we can calculate $p(C|A)$ as
+The denominator $\sum_{j} p(A|B_{i}) p(B_{i}) = p(A)$ would then be regarded as
+the partition function $Z$.
 %
-\begin{equation}
-  p(C|A) = \langle f \rangle.
-\end{equation}
+Using MCMC sampling, we can obtain $p(B_{i}|A) \sim
+\frac{e^{-S[\phi]}[d\phi]}{Z}$ via Bayes' theorem, i.e.\ we can collect many
+samples and see the resulting distribution.
+%
+% Moreover, if we know $f(B_{i}) \equiv p(C|B_{i})$, we can calculate $p(C|A)$
+% as
+% %
+% \begin{equation}
+%   p(C|A) = \langle f \rangle.
+% \end{equation}
 %
 %
 \section{Hamiltonian Monte Carlo}%
@@ -231,11 +293,14 @@ integrator (most commonly the \emph{leapfrog integrator}).
 % integrator (most commonly the \emph{leapfrog integrator}).
 % %
 %
-The addition of random (typically normally distributed) momenta enourages long-distance jumpy in state space with a
-single Metropolis-Hastings (MH) step.
+The addition of random (typically normally distributed) momenta encourages
+long-distance jumps in state space with a single Metropolis-Hastings (MH) step.
 %
-Let the `position' of the physical state be denoted by a vector $x \in\mathbb{R}^{n}$ and the conjugate momenta of the
-physical state be denoted by a vector $v \in\mathbb{R}^{n}$.  Then the Hamiltonian reads
+Let the `position' of the physical state be denoted by a vector $x
+\in\mathbb{R}^{n}$ and the conjugate momenta of the physical state be denoted
+by a vector $v \in\mathbb{R}^{n}$.
+%
+Then the Hamiltonian reads
 %
 \begin{align}
     \mathcal{H}(x, v) &= U(x) + K(v)\\
@@ -265,6 +330,7 @@ Hamiltonians energy conservation.
 %
 
 \subsection{Hamiltonian Dynamics}
+\label{subsec:mcmc_hamiltonian_dynamics}
 % \todo[inline]{TODO:\@ Describe current issues with traditional HMC (mixing
 % between modes for GMM model, issues with using HMC in LQCD, etc.)}
 %
@@ -290,7 +356,7 @@ as a system of differential equations in Eq.~\ref{eq:hamiltons_equations}.
 \label{eq:hamiltons_equations}
 \end{align}
 %
-It can be shown~\cite{2012arXiv1206.1901N} that the above transformation is volume-preserving and reversible, two
+It can be shown~\cite{Neal_2012} that the above transformation is volume-preserving and reversible, two
 necessary factors to guarantee asymptotic convergence of the simulation to the target distribution.
 %
 The dynamics are simulated using the leapfrog integrator, which for a single time step consists of:
@@ -316,41 +382,48 @@ The Metropolis-Hastings acceptance probability for the HMC proposal is given by:
 \label{eq:metropolis_hastings}
 \end{equation}
 %
-Where $\left|\frac{\partial\left[\mathbf{F}\mathbf{L}\xi\right]} {\partial\xi^{T}}\right|$ denotes the determinant of
-the Jacobian describing the transformation, and is equal to $1$ for traditional HMC.\@
+Where $\left|\frac{\partial\left[\mathbf{F}\mathbf{L}\xi\right]}
+{\partial\xi^{T}}\right|$ denotes the determinant of the Jacobian describing
+the transformation, and is equal to $1$ for traditional HMC.\@
 %
-In order to utilize these Hamiltonian trajectories to construct an efficient Markov transition, we need a mechanism for
-introducing momentum to a given point in the target parameter space.
+In order to utilize these Hamiltonian trajectories to construct an efficient
+Markov transition, we need a mechanism for introducing momentum to a given
+point in the target parameter space.
 %
-Fortunately, this can be done by exploiting the probabilistic structure of the system~\cite{Betancourt2017ACI}.
+Fortunately, this can be done by exploiting the probabilistic structure of the
+system~\cite{Betancourt_2017}.
 %
-To lift an initial point in parameter space into one on phase space, we simply sample from the conditional distribution
-over the momentum,
+To lift an initial point in parameter space into one on phase space, we simply
+sample from the conditional distribution over the momentum,
 %
 \begin{equation}
   v \sim \pi(x | v).
 \end{equation}
 %
-Sampling the momentum directly from the conditional distribution ensures that this lift will fall into the typical set
-in phase space.
+Sampling the momentum directly from the conditional distribution ensures that
+this lift will fall into the typical set in phase space.
 %
-We can then proceed to explore the joint typical set by integrating Hamilton's equations as demonstrated above to
-obtain a new configuration $\xi \rightarrow \xip$.
+We can then proceed to explore the joint typical set by integrating Hamilton's
+equations as demonstrated above to obtain a new configuration $\xi \rightarrow
+\xip$.
 %
-We can then return to the target parameter space by simply projecting away the momentum,
+We can then return to the target parameter space by simply projecting away the
+momentum,
 %
 \begin{equation}
   (x, v) \rightarrow x
 \end{equation}
 %
-These three steps when performed in series gives a complete Hamiltonian Markov transition composed of random
-trajectories that rapidly explore the target distribution, as desired.
+These three steps when performed in series gives a complete Hamiltonian Markov
+transition composed of random trajectories that rapidly explore the target
+distribution, as desired.
 %
 An example of this process can be seen in Fig~\ref{fig:hmc_phase_space}.
 %
 \begin{figure}[htpb]
   \includegraphics[width=\textwidth]{hmc_figures/hmc_phase_space11}
-  \caption{\emph{Visualizing HMC for a $1D$ Gaussian} (example from~\cite{Betancourt2017ACI}). Each Hamiltonian Markov
+  \caption{\emph{Visualizing HMC for a $1D$ Gaussian} (example
+    from~\cite{Betancourt_2017}). Each Hamiltonian Markov
     transition lifts the initial state onto a \color{gray}{random level set of the Hamiltonian, }\color{black}
     $\mathcal{H}^{(-1)}(E)$, which can then be explored with a \color{blue}{Hamiltonian trajectory }\color{black}
     before \color{red}{projecting back down }\color{black} to the
@@ -377,4 +450,19 @@ Chain Monte Carlo updates.
         (i.e. Liouville's Theorem).
 \end{enumerate}
 %
+All in all, HMC offers noticeable improvements compared to the `random-walk'
+approach of generic MCMC, but tends to perform poorly on high-dimensional
+distributions.
+%
+This becomes immediately apparent when it is used for simulations in lattice
+gauge theory and lattice QCD, where large autocorrelations and slow `burn-in'
+can become prohibitively expensive.
+% causes an exponential increase in the amount of computational resources
+% required
+
+% large autocorrelations and computational
+% inefficiences can become prohibitively expensive.
+% inefficiences become
+% where large autocorrelations cause difficuly in
+% extract reliable
 \end{document}

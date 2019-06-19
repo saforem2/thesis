@@ -42,8 +42,8 @@ existing models and generate new results.
 % machine learning, and, a sub-discipline of high energy physics that makes heavy use of computer simulations to test
 % existing models and generate new results.
 %
-In order to perform these simulations, spacetime is discretized as a `lattice' whose behavior can then be controlled
-using the laws of physics.
+In order to perform these simulations, spacetime is discretized as a lattice
+whose behavior can then be controlled using the laws of physics.
 % , which makes heavy use of computer simulations to better understand the laws of physics.
 % %
 % In order to perform these simulations, spacetime is discretized as a `lattice' whose behavior is then controlled using
@@ -56,16 +56,20 @@ using the laws of physics.
 % `quantum lattice')
 % by running computer simulations and analyzing the results.
 
-We begin by introducing a new technique that is capable of extracting information about a physical system by `looking'
-at pictures of the system at different temperatures, and provide an analytical framework that explains how this is done
-behind the scenes.
+We begin by introducing a new technique that is capable of extracting
+information about a physical system by `looking' at pictures of the system at
+different temperatures, and provide an analytical framework that explains how
+this is done behind the scenes.
 % why the technique
 % succeeds in this particular case.
 %
-This result demonstrates that our approach is capable of learning non-trivial information about the system without
-being told explicitly how to do so, and without having to provide any information about the underlying physics.
+This result demonstrates that \textbf{our approach is capable of learning
+non-trivial information about the system without being told explicitly how to
+do so}, and without having to provide any information about the underlying
+physics.
 %
-% We then discuss other types of problems in which this technique may prove useful, and include possible directions for
+% We then discuss other types of problems in which this technique may prove
+% useful, and include possible directions for
 % future research.
 
 Next, we look at how machine learning can be used to improve the efficiency of the \emph{Hamiltonian Monte Carlo} (HMC)
@@ -83,45 +87,67 @@ about quantum theory.
 % configurations} can be thought of as `snapshots' of the lattice, which once generated, can then be used to test and
 % make new predictions about our current theories.}
 %
-Currently, these configurations are generated via \emph{Hamiltonian Monte Carlo simulations}, an algorithm that uses 
-what amounts to a `guess and check' strategy and can be summarized as follows:
+Currently, these configurations are generated via \emph{Hamiltonian Monte Carlo
+simulations}, an algorithm that can be summarized as follows:
 %
 \begin{enumerate}
-  \item Start with a random configuration.
-  \item Propose a new configuration by modifying the current configuration in a way that seems promising.
-  \item Check if this new configuration is better than the previous one. If so, we accept it and proceed, otherwise, we
-    return to the previous configuration and try again.
+  \item Start with a random initial configuration.
+  % \item Propose a new configuration by modifying the current configuration in a
+  %   way that seems promising.
+  \item Propose a new configuration by (approximately) evolving the current
+    state through time\footnote{Using \emph{Hamilton's equations}, which
+    describe how a system changes in time.}.
+  \item Check if this new configuration is better than the previous one. If so,
+    we accept it, otherwise, we retain the current
+    configuration.\footnote{Technically, configurations which are `worse' will
+      still be accepted occasionally, but this becomes increasingly
+    unlikely as the drop in `quality' increases.}
 \end{enumerate}
 %
-The amount by which our current configuration is modified is called the \emph{step size}, a parameter which is
-(typically) fixed for the duration of the simulation.
+The difference between the current and proposed configurations can be
+controlled through the \emph{step size}, a parameter that is (typically) fixed
+for the duration of the simulation.
+% The amount by which our current configuration is modified is called the
+% \emph{step size}, a parameter which is (typically) fixed for the duration of
+% the simulation.
 %
-We can improve the likelihood of accepting a new configuration by using a smaller step size, but this leads to
-configurations that are highly correlated with each other, which is undesirable.
+We can improve the likelihood of accepting a new configuration by using a
+smaller step size, but this leads to configurations that are highly correlated
+with each other, which is undesirable.
 % but this causes subsequent
 % configurations to be highly correlated which is undesirable.
 %
-Alternatively, we can take larger steps to reduce correlations, but this causes more of the proposed configurations to
-be rejected.
+Alternatively, we can take larger steps to try and reduce correlations, but
+this causes more of the proposed configurations to be rejected.
 % Alternatively, we can take larger steps to reduce correlations, but this causes more of the proposed configurations to
 % be rejected.
 %
-Immediately we see that computational resources are being wasted each time we propose a new configuration that gets
-rejected, and is a major source of inefficiency in the algorithm.
+Immediately we see that computational resources are being wasted each time we
+propose a new configuration that gets rejected, and is a major source of
+inefficiency in the algorithm.
 % isn't accepted, and is a major source of inefficiency in our algorithm.
 
-The approach presented in this work attempts to combat this issue by using machine learning to reduce the number of
-wasted calculations.
+\textbf{The approach presented in this work attempts to combat this issue by
+using machine learning to reduce the number of wasted calculations.}
 %
-Explicitly, this is done by training the algorithm to better identify those modifications which produce better
-configurations, while simultaneously optimizing the step size to be as large as possible while maintaining a high
-probability of accepting new configurations.
+% Explicitly, this is done by training the algorithm to better identify those
+% modifications which produce better configurations, while simultaneously
+% optimizing the step size to be as large as possible while maintaining a high
+% probability of accepting new configurations.
+Explicitly, this is done by modifying the equations that govern how our system
+evolves in time, and then training the algorithm to identify those
+modifications that ultimately produce `better' configurations.
+% better identify those
+% modifications which produce better configurations, while simultaneously
+% optimizing the step size to be as large as possible while maintaining a high
+% probability of accepting new configurations.
 % to take as large of steps as possible (thereby reducing
 % correlations), while maintaining an acceptable probability of acceptance.
 % without dramatically reducing the probability of rejection.
 %
-In doing so, we are able to reduce the number of unnecessary calculations that don't produce new configurations,
-thereby improving the efficiency of the algorithm as a whole.
+In doing so, we are able to reduce the number of unnecessary calculations
+(which don't produce new configurations), thereby improving the efficiency of
+the algorithm as a whole.
 % consequently improving the efficiency of the algorithm as a whole.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -2238,19 +2238,26 @@ month={Feb},}
   url = {https://link.aps.org/doi/10.1103/PhysRevE.98.052129}
 }
 
-@ARTICLE{2017arXiv171109268L,
-   author = {{Levy}, D. and {Hoffman}, M.~D. and {Sohl-Dickstein}, J.},
-    title = "{Generalizing Hamiltonian Monte Carlo with Neural Networks}",
-  journal = {ArXiv e-prints},
-archivePrefix = "arXiv",
-   eprint = {1711.09268},
- primaryClass = "stat.ML",
- keywords = {Statistics - Machine Learning, Computer Science - Artificial Intelligence, Computer Science - Machine Learning},
-     year = 2017,
-    month = nov,
-   adsurl = {http://adsabs.harvard.edu/abs/2017arXiv171109268L},
-  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@article{2017arXiv171109268L,
+ title={Generalizing Hamiltonian Monte Carlo with Neural Networks},
+  url={http://arxiv.org/abs/1711.09268},
+ abstractNote={We present a general-purpose method to train Markov chain Monte
+Carlo kernels, parameterized by deep neural networks, that converge and mix
+quickly to their target distribution. Our method generalizes Hamiltonian Monte
+Carlo and is trained to maximize expected squared jumped distance, a proxy for
+mixing speed. We demonstrate large empirical gains on a collection of simple
+but challenging distributions, for instance achieving a 106× improvement in
+effective sample size in one case, and mixing when standard HMC makes no
+measurable progress in a second. Finally, we show quantitative and qualitative
+gains on a real-world task: latent-variable generative modeling. We release an
+open source TensorFlow implementation of the algorithm.},
+  note={arXiv: 1711.09268},
+ journal={arXiv:1711.09268 [cs, stat]},
+  author={Levy, Daniel and Hoffman, Matthew D. and Sohl-Dickstein, Jascha},
+  year={2017},
+ month={Nov} 
 }
+
 
 @ARTICLE{2012arXiv1206.1901N,
    author = {{Neal}, R.~M.},
@@ -2334,17 +2341,54 @@ archivePrefix = "arXiv",
   publisher={Cambridge university press}
 }
 
-@inproceedings{goodfellow2014generative,
-  title={Generative adversarial nets},
-  author={Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua},
-  booktitle={Advances in neural information processing systems},
-  pages={2672--2680},
-  year={2014}
+@article{goodfellow2014generative,
+ title={Generative Adversarial Networks},
+ url={http://arxiv.org/abs/1406.2661},
+ abstractNote={We propose a new framework for estimating generative models via
+               an adversarial process, in which we simultaneously train two
+               models: a generative model G that captures the data
+               distribution, and a discriminative model D that estimates the
+               probability that a sample came from the training data rather
+               than G. The training procedure for G is to maximize the
+               probability of D making a mistake. This framework corresponds to
+               a minimax two-player game. In the space of arbitrary functions G
+               and D, a unique solution exists, with G recovering the training
+               data distribution and D equal to 1/2 everywhere. In the case
+               where G and D are defined by multilayer perceptrons, the entire
+               system can be trained with backpropagation. There is no need for
+               any Markov chains or unrolled approximate inference networks
+               during either training or generation of samples. Experiments
+               demonstrate the potential of the framework through qualitative
+               and quantitative evaluation of the generated samples.},
+  note={arXiv: 1406.2661},
+ journal={arXiv:1406.2661 [cs, stat]},
+  author={Goodfellow, Ian J. and Pouget-Abadie, Jean and Mirza, Mehdi and Xu,
+          Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron
+          and Bengio, Yoshua}, 
+year={2014},
+ month={Jun} 
 }
 
 @article{kingma2013auto,
-  title={Auto-encoding variational bayes},
-  author={Kingma, Diederik P and Welling, Max},
-  journal={arXiv preprint arXiv:1312.6114},
-  year={2013}
+ title={Auto-Encoding Variational Bayes},
+ url={http://arxiv.org/abs/1312.6114},
+ abstractNote={How can we perform effcient
+ inference and learning in directed probabilistic models, in the presence of
+continuous latent variables with intractable posterior distributions, and large
+datasets? We introduce a stochastic variational inference and learning
+algorithm that scales to large datasets and, under some mild differentiability
+conditions, even works in the intractable case. Our contributions is two-fold.
+First, we show that a reparameterization of the variational lower bound yields
+a lower bound estimator that can be straightforwardly optimized using standard
+stochastic gradient methods. Second, we show that for i.i.d.  datasets with
+continuous latent variables per datapoint, posterior inference can be made
+especially efﬁcient by ﬁtting an approximate inference model (also called a
+recognition model) to the intractable posterior using the proposed lower bound
+estimator. Theoretical advantages are reﬂected in experimental results.},
+ note={arXiv: 1312.6114},
+ journal={arXiv:1312.6114 [cs, stat]},
+ author={Kingma, Diederik P. and Welling, Max}, 
+year={2013},
+ month={Dec} 
 }
+

@@ -3,7 +3,7 @@
 \usepackage{preamble}
 \usepackage{import}
 \usepackage{sourcecode}
-\usepackage{pythonhighlight}
+% \usepackage{pythonhighlight}
 \graphicspath{%
   {l2hmc_paper/figures/}{figures/}%
   {ising_worm_paper/figures/}{figures/}%
@@ -93,8 +93,8 @@ Thesis Supervisor: \myadvisor%
 \pagenumbering{arabic}
 % }}}
 
-% \begin{doublespace}
-\linespread{1.25}
+\begin{doublespace}
+% \linespread{1.25}
 % \mathversion{bold}
 
 \chapter{Introduction}%
@@ -114,7 +114,7 @@ Thesis Supervisor: \myadvisor%
 \subfile{mcmc/mcmc.tex}
 
 \chapter{Semi-Supervised Learning: L2HMC}%
-\label{chap:semi_supervised_learning}
+\label{chap:l2hmc}
 \subfile{l2hmc_paper/l2hmc_writeup.tex}
 
 %% main contents %%
@@ -130,7 +130,7 @@ Thesis Supervisor: \myadvisor%
 % \include{source_code/appendix_code}
 % appendix {{{
 % \appendix%[heading=bibintoc]
-% \end{doublespace}
+\end{doublespace}
 
 \begin{appendix}
 %

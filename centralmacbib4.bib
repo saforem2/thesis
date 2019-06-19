@@ -2354,19 +2354,31 @@ archivePrefix = "arXiv",
   year={1995}
 }
 
-@ARTICLE{2014arXiv1412.6806S,
-   author = {{Springenberg}, J.~T. and {Dosovitskiy}, A. and {Brox}, T. and 
-	{Riedmiller}, M.},
-    title = "{Striving for Simplicity: The All Convolutional Net}",
-  journal = {arXiv e-prints},
-archivePrefix = "arXiv",
-   eprint = {1412.6806},
- keywords = {Computer Science - Machine Learning, Computer Science - Computer Vision and Pattern Recognition, Computer Science - Neural and Evolutionary Computing},
-     year = 2014,
-    month = dec,
-   adsurl = {https://ui.adsabs.harvard.edu/abs/2014arXiv1412.6806S},
-  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@article{2014arXiv1412.6806S,
+ title={Striving for Simplicity: The All Convolutional Net},
+  url={http://arxiv.org/abs/1412.6806},
+ abstractNote={Most modern convolutional neural networks (CNNs) used for object
+recognition are built using the same principles: Alternating convolution and
+max-pooling layers followed by a small number of fully connected layers. We
+re-evaluate the state of the art for object recognition from small images with
+convolutional networks, questioning the necessity of different components in
+the pipeline. We fnd that max-pooling can simply be replaced by a convolutional
+layer with increased stride without loss in accuracy on several image
+recognition benchmarks. Following this fnding – and building on other recent
+work for ﬁnding simple network structures – we propose a new architecture that
+consists solely of convolutional layers and yields competitive or state of the
+art performance on several object recognition datasets (CIFAR-10, CIFAR-100,
+ImageNet). To analyze the network we introduce a new variant of the
+“deconvolution approach” for visualizing features learned by CNNs, which can be
+applied to a broader range of network structures than existing approaches.},
+  note={arXiv: 1412.6806},
+ journal={arXiv:1412.6806 [cs]},
+  author={Springenberg, Jost Tobias and Dosovitskiy, Alexey and Brox, Thomas
+          and Riedmiller, Martin}, 
+year={2014},
+ month={Dec} 
 }
+
 
 @inproceedings{scherer2010evaluation,
   title={Evaluation of pooling operations in convolutional architectures for object recognition},
@@ -2377,27 +2389,71 @@ archivePrefix = "arXiv",
   organization={Springer}
 }
 
-@ARTICLE{dinhRealNVP,
-   author = {{Dinh}, L. and {Sohl-Dickstein}, J. and {Bengio}, S.},
-    title = "{Density estimation using Real NVP}",
-  journal = {arXiv e-prints},
-archivePrefix = "arXiv",
-   eprint = {1605.08803},
- keywords = {Computer Science - Machine Learning, Computer Science - Artificial Intelligence, Computer Science - Neural and Evolutionary Computing, Statistics - Machine Learning},
-     year = 2016,
-    month = may,
-   adsurl = {https://ui.adsabs.harvard.edu/abs/2016arXiv160508803D},
-  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@article{Ioffe_Szegedy_2015,
+  title={Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift},
+  url={http://arxiv.org/abs/1502.03167},
+  abstractNote={Training Deep Neural Networks is complicated by the fact that
+                the distribution of each layer’s inputs changes during
+                training, as the parameters of the previous layers change. This
+                slows down the training by requiring lower learning rates and
+                careful parameter initialization, and makes it notoriously hard
+                to train models with saturating nonlinearities. We refer to
+                this phenomenon as internal covariate shift, and address the
+                problem by normalizing layer inputs. Our method draws its
+                strength from making normalization a part of the model
+                architecture and performing the normalization for each training
+                mini-batch. Batch Normalization allows us to use much higher
+                learning rates and be less careful about initialization. It
+                also acts as a regularizer, in some cases eliminating the need
+                for Dropout. Applied to a state-of-the-art image classiﬁcation
+                model, Batch Normalization achieves the same accuracy with 14
+                times fewer training steps, and beats the original model by a
+                signiﬁcant margin. Using an ensemble of batchnormalized
+                networks, we improve upon the best published result on ImageNet
+                classiﬁcation: reaching 4.9% top-5 validation error (and 4.8%
+                test error), exceeding the accuracy of human raters.},
+  note={arXiv: 1502.03167},
+  journal={arXiv:1502.03167 [cs]},
+  author={Ioffe, Sergey and Szegedy, Christian},
+  year={2015},
+  month={Feb}
 }
 
-@book{Bishop:2006:PRM:1162264,
- author = {Bishop, Christopher M.},
- title = {Pattern Recognition and Machine Learning (Information Science and Statistics)},
- year = {2006},
- isbn = {0387310738},
- publisher = {Springer-Verlag},
- address = {Berlin, Heidelberg},
-} 
+
+@article{dinhRealNVP,
+  title={Density estimation using Real NVP},
+  url={http://arxiv.org/abs/1605.08803},
+  abstractNote={Unsupervised learning of probabilistic models is a central yet
+                challenging problem in machine learning. Speciﬁcally, designing
+                models with tractable learning, sampling, inference and
+                evaluation is crucial in solving this task. We extend the space
+                of such models using real-valued non-volume preserving (real
+                NVP) transformations, a set of powerful, stably invertible, and
+                learnable transformations, resulting in an unsupervised
+                learning algorithm with exact log-likelihood computation, exact
+                and efﬁcient sampling, exact and efﬁcient inference of latent
+                variables, and an interpretable latent space. We demonstrate
+                its ability to model natural images on four datasets through
+                sampling, log-likelihood evaluation, and latent variable
+                manipulations.},
+  note={arXiv: 1605.08803},
+  journal={arXiv:1605.08803 [cs, stat]},
+  author={Dinh, Laurent and Sohl-Dickstein, Jascha and Bengio, Samy},
+  year={2016},
+  month={May} 
+}
+
+@book{Bishop,
+ place={New York},
+ series={Information science and statistics},
+ title={Pattern recognition and machine learning},
+  ISBN={978-0-387-31073-2},
+ publisher={Springer},
+ author={Bishop, Christopher M.},
+ year={2006},
+ collection={Information science and statistics}
+}
+
 
 @ARTICLE{mcmc_for_dummies,
    author = {{Hanada}, M.},
@@ -2413,8 +2469,105 @@ archivePrefix = "arXiv",
   adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
-@inproceedings{Betancourt2017ACI,
-  title={A Conceptual Introduction to Hamiltonian Monte Carlo},
-  author={Michael Betancourt},
-  year={2017}
+@article{Hanada_2018,
+  title={Markov Chain Monte Carlo for Dummies},
+  url={http://arxiv.org/abs/1808.08490},
+  abstractNote={This is an introductory article about Markov Chain Monte Carlo
+                (MCMC) simulation for pedestrians. Actual simulation codes are
+                provided, and necessary practical details, which are skipped in
+                most textbooks, are shown. The second half is written for
+                hep-th and hep-lat audience. It explains speciﬁc methods needed
+                for simulations with dynamical fermions, especially
+                supersymmetric Yang-Mills. The examples include QCD and matrix
+                integral, in addition to SYM.},
+  note={arXiv: 1808.08490},
+  journal={arXiv:1808.08490 [cond-mat, physics:hep-lat, physics:hep-th]},
+  author={Hanada, Masanori},
+  year={2018}, month={Aug}
 }
+
+@article{Betancourt_2017,
+  title={A Conceptual Introduction to Hamiltonian Monte Carlo},
+  url={http://arxiv.org/abs/1701.02434},
+  abstractNote={Hamiltonian Monte Carlo has proven a remarkable empirical
+                success, but only recently have we begun to develop a rigorous
+                understanding of why it performs so well on diﬃcult problems
+                and how it is best applied in practice. Unfortunately, that
+                understanding is conﬁned within the mathematics of diﬀerential
+                geometry which has limited its dissemination, especially to the
+                applied communities for which it is particularly important.},
+  note={arXiv: 1701.02434},
+  journal={arXiv:1701.02434 [stat]},
+  author={Betancourt, Michael},
+  year={2017}, 
+  month={Jan}
+}
+
+@article{Neal_2012,
+  title={MCMC using Hamiltonian dynamics},
+  url={http://arxiv.org/abs/1206.1901},
+	abstractNote={Hamiltonian dynamics can be used to produce distant proposals
+		for the Metropolis algorithm, thereby avoiding the slow exploration of the
+		state space that results from the diffusive behaviour of simple random-walk
+		proposals. Though originating in physics, Hamiltonian dynamics can be applied
+		to most problems with continuous state spaces by simply introducing
+		fictitious “momentum” variables. A key to its usefulness is that
+		Hamiltonian dynamics preserves volume, and its trajectories can thus be
+		used to define complex mappings without the need to account for a
+		hard-to-compute Jacobian factor - a property that can be exactly maintained
+		even when the dynamics is approximated by discretizing time. In this
+		review, I discuss theoretical and practical aspects of Hamiltonian Monte
+		Carlo, and present some of its variations, including using windows of
+		states for deciding on acceptance or rejection, computing trajectories
+		using fast approximations, tempering during the course of a trajectory to
+		handle isolated modes, and short-cut methods that prevent useless
+		trajectories from taking much computation time.},
+  note={arXiv: 1206.1901},
+  journal={arXiv:1206.1901 [physics, stat]},
+  author={Neal, Radford M.},
+  year={2012},
+  month={Jun} }
+
+
+
+
+@ARTICLE{Betancourt2017ACI,
+     author = {{Betancourt}, Michael},
+      title = "{A Conceptual Introduction to Hamiltonian Monte Carlo}",
+    journal = {arXiv e-prints},
+   keywords = {Statistics - Methodology},
+       year = "2017",
+      month = "Jan",
+        eid = {arXiv:1701.02434},
+      pages = {arXiv:1701.02434},
+archivePrefix = {arXiv},
+     eprint = {1701.02434},
+primaryClass = {stat.ME},
+     adsurl = {https://ui-adsabs-harvard-edu.proxy.lib.uiowa.edu/abs/2017arXiv170102434B},
+    adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+@misc{scribeno74:online,
+author = {},
+title = {scribe\_note\_lecture17.pdf},
+howpublished = {\url{https://www.cs.cmu.edu/~epxing/Class/10708-14/scribe_notes/scribe_note_lecture17.pdf}},
+month = {},
+year = {},
+note = {(Accessed on 06/18/2019)}
+}
+
+@inbook{Geyer_2011,
+ title={Introduction to Markov Chain Monte Carlo},
+ volume={20116022},
+ ISBN={978-1-4200-7941-8},
+ url={http://www.crcnetbase.com/doi/abs/10.1201/b10905-2},
+ DOI={10.1201/b10905-2},
+ booktitle={Handbook of Markov Chain Monte Carlo},
+ publisher={Chapman and Hall/CRC},
+ author={Geyer, Charles},
+ editor={Brooks, Steve and Gelman, Andrew and Jones, Galin and Meng,
+				 Xiao-LiEditors},
+ year={2011},
+ month={May} 
+}
+<Paste>
