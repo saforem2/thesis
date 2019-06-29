@@ -20,7 +20,7 @@ weights in a neural network.
 In order to demonstrate the usefulness of this new approach, we use various
 metrics for measuring the performance of the trained (L2HMC) sampler vs.\ the
 generic HMC sampler.
-%
+
 First, we will look at applying this algorithm to a two-dimensional Gaussian
 Mixture Model (GMM).
 %
@@ -35,7 +35,7 @@ existence of both modes, and mixes (`tunnels') between the two with ease.
 Additionally, we will observe that the trained L2HMC sampler mixes much faster
 than the generic HMC sampler, as evidenced through their respective
 autocorrelation spectra.
-%
+
 This ability to reduce autocorrelations is an important metric for measuring
 the efficiency of a general MCMC algorithm, and is of great importance for
 simulations in lattice gauge theory and lattice QCD.
@@ -80,7 +80,7 @@ Additionally, we write $\bar m^{t} = \mathbbm{1} - m^{t}$ and $x_{m^t} = x
 \odot m^{t}$, where $\odot$ denotes element-wise multiplication, and
 $\mathbbm{1}$ the vector of $1$'s in each entry.
 %
-%
+
 We begin with a subset of the augmented space, $\zeta_1 \equiv (x, \partial_{x}
 U(x), t)$, independent of the momentum $v$.
 %
@@ -95,13 +95,30 @@ First, we update the momentum $v$, which depends only on the subset $\zeta_1$.
 This update is written
 %
 \begin{equation}
-  \vp = v \odot 
-    \underbrace{\exp\left(\frac{\varepsilon}{2}
-    S_{v}(\zeta_1)\right)}_{\text{\footnotesize{Momentum scaling}}}%
-    - \frac{\varepsilon}{2}\left[\partial_{x} U(x)%
-      \odot\underbrace{\exp(\varepsilon
-      Q_{v}(\zeta_1))}_{\text{\footnotesize{Gradient scaling}}}%
-    + \underbrace{T_v(\zeta_1)}_{\text{\footnotesize{Translation}}}\right].
+  \vp = v\, \odot%
+      \hspace{-1mm}%
+      \underbrace{\exp\left(\frac{\varepsilon}{2}
+      S_{v}(\zeta_1)\right)}_{\text{%
+        \footnotesize{\textbf{Momentum scaling}\normalsize}
+      }}%
+        \hspace{-1mm}%
+      - \frac{\varepsilon}{2}\bigg[%
+          \partial_{x} U(x)%
+          \odot\hspace{-1mm}\underbrace{\exp(\varepsilon
+          Q_{v}(\zeta_1))}_{\text{%
+            \footnotesize{\textbf{Gradient scaling}\normalsize}
+          }}
+        + \underbrace{T_v(\zeta_1)}_{\text{%
+            \footnotesize{\textbf{Translation}\normalsize}
+          }}
+      \bigg]
+  % \vp = v \odot
+  %   \underbrace{\exp\left(\frac{\varepsilon}{2}
+  %   S_{v}(\zeta_1)\right)}_{\text{\footnotesize{Momentum scaling}}}%
+  %   - \frac{\varepsilon}{2}\left[\partial_{x} U(x)%
+  %     \odot\underbrace{\exp(\varepsilon
+  %     Q_{v}(\zeta_1))}_{\text{\footnotesize{Gradient scaling}}}%
+  %   + \underbrace{T_v(\zeta_1)}_{\text{\footnotesize{Translation}}}\right].
     \label{eq:update_momentum_forward1}
 \end{equation}
 %
@@ -163,7 +180,7 @@ things, acceleration in low-density zones to facilitate mixing between modes,
 and that the scaling term applied to the gradient may allow better conditioning
 of the energy landscape (e.g., by learning a diagonal inertia tensor), or
 partial ignoring of the energy gradient for rapidly oscillating energies.
-%
+
 Second, note that because the determinant of the Jacobian appears in the
 Metropolis-Hastings (MH) acceptance probability, we require the Jacobian of
 each update to be efficiently computable (i.e.\ independent of the variable
@@ -230,7 +247,7 @@ inaccessible.
   \normalsize
   \caption{Example of how the determinant of the Jacobian can deform the energy landscape.}
 \end{figure}
-%
+
 To simplify our notation, introduce an additional operator $\mathbf{R}$ that
 re-samples the momentum and direction, e.g.\ given $\xi = (x, v, d)$,
 $\mathbf{R}\,\xi = (x, v^{\prime}, d^{\prime})$ where $v^{\prime} \sim
@@ -371,8 +388,8 @@ Fig~\ref{fig:x_net_flowchart}.
   \centering
   \includegraphics[width=\textwidth]{generic_net/generic_net4.png}
   \caption{Illustration showing the generic (fully-connected) network
-    architecture for training $S_v$, $Q_v$, and
-  $T_v$.}%
+    architecture for training $S_v$, $Q_v$, and $T_v$. Figure adapted
+		with permission from~\cite{joeyl2hmc}.}%
 \label{fig:generic_net}
 \end{figure}
 %
@@ -417,8 +434,8 @@ Next, the network computes
 These weights ($h_2$) are then used to compute the network's output:
 %
 \begin{align}
-    S_x &= \lambda_s \tanh(W^{(s)} h_2 + b^{(s)})\quad (\in \mathbb{R}^{n})\\
-    Q_x &= \lambda_q \tanh(W^{(q)} h_2 + b^{(q)})\quad (\in \mathbb{R}^{n})\\
+    S_x &= \lambda_S \tanh(W^{(S)} h_2 + b^{(S)})\quad (\in \mathbb{R}^{n})\\
+    Q_x &= \lambda_{Q} \tanh(W^{(Q)} h_2 + b^{(Q)})\quad (\in \mathbb{R}^{n})\\
     T_x &= W^{(T)} h_2 + b^{(T)}\quad (\in \mathbb{R}^{n}),
 \end{align}
 %
@@ -489,9 +506,10 @@ of the problem.
 %
 Note that the first term helps to prevent the sampler from becoming stuck in a
 state where it cannot move effectively, and the second term helps to maximize
-the distance between subsequent moves in the Markov chain.  The sampler is then
-trained by minimizing $\ell_{\lambda}$ over both the target and initialization
-distributions.
+the distance between subsequent moves in the Markov chain.  
+
+The sampler is then trained by minimizing $\ell_{\lambda}$ over both the target
+and initialization distributions.
 %
 Explicitly, for an initial distribution $\pi_0$ over $\mathcal{X}$, we define
 the initialization distribution as $q(\xi) = \pi_0(x) \mathcal{N}(v; 0, I)
@@ -648,7 +666,7 @@ in the networks ``memory''.
 %
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.98\textwidth]{gmm_figures/iso_gmm_chains1}
+    \includegraphics[width=\textwidth]{gmm_figures/iso_gmm_chains1}
     \caption{Comparison of trajectories generated using L2HMC (top), and
         traditional HMC with $\eps = 0.25$ (middle) and $\eps = 0.5$ (bottom).
         Note that L2HMC is able to successfully mix between modes, whereas HMC
@@ -801,7 +819,7 @@ is then fed to the generic network shown in Fig.~\ref{fig:generic_net}.
 %
 \begin{figure}[htpb] 
   \centering
-  \includegraphics[width=\textwidth]{conv_net/conv_net.pdf}
+  \includegraphics[width=\textwidth]{conv_net/conv_net_final.png}
   % \includegraphics[width=\textwidth]{full_network/generic_net.png}
   \caption{Convolutional structure used for learning localized features of
   rectangular lattice.}% 
@@ -1027,7 +1045,7 @@ In an additional systematic attempt to debug the problem, the sampler was
 trained and evaluated multiple times over a range of different values of both
 $N_{\mathrm{LF}}$ and $\alpha_{Q}$.
 %
-These results are included in Sec.~\ref{chap:debugging_results}.
+These results are included in Appendix~\ref{chap:debugging_results}.
 %
 Frustratingly, the issue seemed to be almost irreproducible.
 %

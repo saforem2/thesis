@@ -11,7 +11,7 @@
 Broadly speaking, the subject of \emph{machine learning} (ML), refers to the
 automated detection of meaningful patterns in
 data~\cite{shalev2014understanding}, and encompasses two major classes of
-problems: \emph{estimation} and \emph{prediction}. 
+problems~\cite{Mehta_high_bias_2019}: \emph{estimation} and \emph{prediction}. 
 %
 % In particular, ML is concerned with two major classes of problems,
 % \emph{estimation} and \emph{prediction}.
@@ -305,7 +305,7 @@ least squares example.
 
 \section{Feed-forward Neural Networks}
 We can construct a Neural Network model as a series of functional
-transformations.
+transformations~\cite{Bishop}.
 %
 First, we construct $M$ linear combinations of the input variables $x_{1},
 \ldots, x_{D}$ in the form
@@ -430,7 +430,9 @@ This coupling of parameters between layers often leads to complicated
 expressions for the gradients and is often slow in practice.
 %
 In order to address these issues, an alternative approach is frequently used
-which relies upon the \textbf{backpropagation} algorithm, outlined below.
+which relies upon the \textbf{backpropagation}
+algorithm~\cite{Horikawa_1992,Schmidhuber_2015,Nielsen,hinton_1986}, outlined
+below.  
 %
 For consistency, we adopt the following notations:
 %
@@ -633,35 +635,43 @@ Alg.~\ref{alg:backprop_algorithm}.
     \DontPrintSemicolon%
     \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}%
     \caption{Backpropagation Algorithm}%
-    \Input{A data set $X = \{(\vec{x}_{1}, t_{1}), \ldots, (\vec{x}_{N},
-      t_{N})\}$ consisting of $N$ input-output pairs, the learning rate
-      $\alpha$, the loss function $\mathcal{L}$, and the activation function
-      $h$}\;
+    \Input{%
+      \begin{itemize}
+        \item A data set $X = \{(\vec{x}_{1}, t_{1}), \ldots, (\vec{x}_{N},
+          t_{N})\}$ consisting of $N$ input-output pairs.
+        \item The learning rate $\alpha$.
+        \item the loss function $\mathcal{L}$, and the activation function $h$\;
+      \end{itemize}%
+    }
+    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
     %
     \begin{enumerate}
       \item \textbf{Forward pass:} For each input-output pair $(\vec{x}_{d},
-        t_{d})$, store the results $y_{d}$, $a_{j}^{k}$, and $z_{j}^{k}$ for
+        t_{d})$, store the results $y_{d}$, $a_{j}^{k}$, and $z_{j}^{k}$ for \\
         each node $j$ in layer $k$ by proceeding from the input layer to the
         output layer $m$.\;
       \item \textbf{Backward pass:} For each input-output pair $(\vec{x}_{d},
         t_{d})$, store the results $\partial \mathcal{L}_{d}\,/\, \partial
-        w_{ij}^{k}$ for each weight $w_{ij}^{k}$ connecting node $i$ in layer
-        $k - 1$ to node $j$ in layer $k$ by proceeding from layer $m$, the
-        output layer, to the input layer.\;
+        w_{ij}^{k}$ for \\
+        each weight $w_{ij}^{k}$ connecting node $i$ in layer $k - 1$ to node
+        $j$ in layer $k$ by proceeding \\
+        from layer $m$, the output layer, to the input layer.\;
         \begin{itemize}
           \item Evaluate the error term for the final layer $\delta_{1}^{m}$ by
             using Eq.~\ref{eq:output_layer}.\;
           \item Backpropagate the error terms for the hidden layers
-            $\delta_{j}^{k}$, working backwards from the final hidden layer $k
-            = m - 1$ by repeatedly using Eq.~\ref{eq:hidden_layers}.\;
+            $\delta_{j}^{k}$, working backwards \\
+            from the final hidden layer $k = m - 1$ by repeatedly using
+            Eq.~\ref{eq:hidden_layers}.\;
           \item Evaluate the partial derivatives of the individual error
-            $\mathcal{L}_{d}$ with respect to $w_{ij}^{k}$ by using
-            Eq.~\ref{eq:loss_terms}.\;
+            $\mathcal{L}_{d}$ with respect to $w_{ij}^{k}$ \\
+            by using Eq.~\ref{eq:loss_terms}.\;
         \end{itemize}
       \item \textbf{Combine individual gradients:} for each input-output pair
-        $\frac{\partial \mathcal{L}_{n}}{\partial w_{ij}^{k}}$ to get the total
+        $\frac{\partial \mathcal{L}_{n}}{\partial w_{ij}^{k}}$ to get 
+        the total \\
         gradient $\frac{\partial \mathcal{L}(X, \theta)}{\partial w_{ij}^{k}}$
-        for the entire set of input-output pairs using\;
+        for the entire set of input-output pairs using:\;
         \begin{equation*}
           \frac{\partial \mathcal{L}(X, \theta)}{\partial w_{ij}^{k}} 
           = \frac{1}{N}\sum_{d=1}^{N}\frac{\partial}{\partial w_{ij}^{k}}
@@ -857,14 +867,14 @@ the set of activation maps for each different filter are stacked together along
 the depth dimension to produce the output volume.
 %
 This idea of parameter sharing helps contribute to the translation invariance
-of the CNN architecture.
+of the CNN architecture~\cite{Zhang_1990}.
 %
 \subsection{Pooling Layers}
 Another important concept of CNNs is pooling, which is a form of non-linear
 down-sampling.
 %
 This concept is implemented in what we call \emph{pooling layers}, which are
-usually used immediately following convolutional layers.
+usually used immediately following convolutional layers~\cite{hinton_2006}.
 %
 The pooling layer serves to progressively reduce the spatial size of the
 representation, to reduce the number of parameters, memory footprint and amount
