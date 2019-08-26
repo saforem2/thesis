@@ -49,15 +49,49 @@
   top=2.54cm,
 }
 \usepackage[utf8]{inputenc}
+% \usepackage{yhmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{amsmath}
 
 %% ref related
 \usepackage{varioref}
 % \usepackage[linktocpage=true]{hyperref}
 %% toc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[T1]{fontenc}
-\usepackage{charter}
+% \usepackage[scaled=.98,sups,osf]{XCharter}% lining figures in math, osf in text
+% \usepackage[sups,osf]{XCharter}% lining figures in math, osf in text
+\usepackage[sups]{XCharter}% lining figures in math, osf in text
+\usepackage[scaled=1.04,varqu,varl]{inconsolata}% inconsolata typewriter
+\usepackage[type1]{cabin}% sans serif
+\usepackage[charter,vvarbb,scaled=1.07]{newtxmath}
+\usepackage[cal=boondoxo]{mathalfa}
+% \linespread{1.04}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage[scaled]{beramono}
+% \usepackage[T1]{fontenc}
+% \usepackage{kpfonts}%  for math
+% \usepackage{libertine}%  serif and sans serif
+% \usepackage[scaled=0.85]{beramono}%% mono
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{unicode-math}
+% \usepackage{libertine}
+% \setmathfont{Latin Modern Math}
+% \setmathfont[range=\mathit/{latin,Latin,num,Greek,greek}]{Linux Biolinum O Italic}
+% \setmathfont[range=\mathup/{latin,Latin,num,Greek,greek}]{Linux Biolinum O}
+% \setmathfont[range=\mathbfup/{latin,Latin,num,Greek,greek}]{Linux Biolinum O Bold}
+% \setmathfont[range={\mathrm,0048-0057}]{Linux Biolinum O}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{lmodern}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{charter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{XCharter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \usepackage[expert]{mathdesign}
-\usepackage{upgreek}
+% \usepackage{upgreek}
 % \usepackage[bitstream-charter]{mathdesign}
 % \DeclareMathVersion{mathchartertext}
 % \SetSymbolFont{letters}{mathchartertext}{OML}{mdbch}{m}{n}
@@ -76,21 +110,15 @@
 \usepackage{textcomp}
 % \usepackage{listings}
 % \usepackage{minted}
-\usepackage[scaled]{beramono}
 % \renewcommand*\familydefault{ttdefault}
 \usepackage{lineno}
-\usepackage{amsthm}
 \usepackage{mathtools}
 \usepackage{siunitx}
 \usepackage{silence}
-\usepackage{amssymb}
-\usepackage{gensymb}
 \usepackage{bm}
 \usepackage{bbm}
-\usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{mathdots}
-\usepackage{yhmath}
 \usepackage{cancel}
 \usepackage{color}
 \usepackage{array}
@@ -98,7 +126,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usetikzlibrary{fadings}
-\usepackage[pdftex,unicode,linktocpage=true]{hyperref}
+\usepackage[unicode,linktocpage=true]{hyperref}
 \hypersetup{%
   colorlinks  = true,
   urlcolor    = magenta,
@@ -113,12 +141,14 @@
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 \renewcommand{\cftfigleader}{\cftdotfill{\cftdotsep}}
 \renewcommand{\cfttableader}{\cftdotfill{\cftdotsep}}
+
+\renewcommand{\cftchapfont}{\scshape\large}
 %%% adjust sectional unit title fonts in toc
-\renewcommand{\cftchapfont}{\usefont{T1}{qhv}{m}{n}\selectfont\MakeUppercase}
-\renewcommand{\cftchappagefont}{\usefont{T1}{qhv}{m}{n}\selectfont}
-\renewcommand{\cftsecfont}{\usefont{T1}{qhv}{m}{n}\selectfont} 
-\renewcommand{\cftsubsecfont}{\usefont{T1}{qhv}{m}{n}\selectfont}%\capitalize}
-\renewcommand{\cftsubsubsecfont}{\usefont{T1}{qhv}{m}{n}\selectfont}%\capitalize}
+% \renewcommand{\cftchapfont}{\usefont{T1}{qhv}{m}{n}\selectfont\MakeUppercase}
+% \renewcommand{\cftchappagefont}{\usefont{T1}{qhv}{m}{n}\selectfont}
+% \renewcommand{\cftsecfont}{\usefont{T1}{qhv}{m}{n}\selectfont}
+% \renewcommand{\cftsubsecfont}{\usefont{T1}{qhv}{m}{n}\selectfont}%\capitalize}
+% \renewcommand{\cftsubsubsecfont}{\usefont{T1}{qhv}{m}{n}\selectfont}%\capitalize}
 %%% use figure/table.num for the lot and lof
 %\renewcommand{\cftfigfont}{Figure~\alph{fig}.}
 %% source: https://tex.stackexchange.com/questions/419103/how-to-change-the-numbering-style-in-list-of-table-and-list-of-figures
@@ -139,13 +169,14 @@
 %%% title names
 %%% center uppercase toc titles
 %% https://tex.stackexchange.com/a/255699/154200
-\renewcommand{\cfttoctitlefont}{\hspace*{\fill}\usefont{T1}{qhv}{m}{n}\selectfont\bfseries\Large\MakeUppercase}
-\renewcommand{\cftaftertoctitle}{\hspace*{\fill}}
-\renewcommand{\contentsname}{Table of Contents}
-\renewcommand{\cftlottitlefont}{\usefont{T1}{qhv}{m}{n}\selectfont\bfseries\hfill\Largenormalsize\MakeUppercase}
-\renewcommand{\cftafterlottitle}{\hfill}
-\renewcommand{\cftloftitlefont}{\usefont{T1}{qhv}{m}{n}\selectfont\bfseries\hfill\Large\MakeUppercase}
-\renewcommand{\cftafterloftitle}{\hfill}
+  % {\usefont{T1}{qhv}{m}{n}\selectfont\Huge\bfseries}
+% \renewcommand{\cfttoctitlefont}{\hspace*{\fill}\usefont{T1}{qhv}{m}{n}\selectfont\bfseries\Large\MakeUppercase}
+% \renewcommand{\cftaftertoctitle}{\hspace*{\fill}}
+% \renewcommand{\contentsname}{Table of Contents}
+% \renewcommand{\cftlottitlefont}{\usefont{T1}{qhv}{m}{n}\selectfont\bfseries\hfill\Largenormalsize\MakeUppercase}
+% \renewcommand{\cftafterlottitle}{\hfill}
+% \renewcommand{\cftloftitlefont}{\usefont{T1}{qhv}{m}{n}\selectfont\bfseries\hfill\Large\MakeUppercase}
+% \renewcommand{\cftafterloftitle}{\hfill}
 %% this package binds all indices to toc
 \usepackage{tocbibind}
 %%% remove toc numbering
@@ -209,37 +240,41 @@
 %% customize heading styles
 % {\normalfont\fontsize{20.74}{19}\sffamily\bfseries}
 \definecolor{gray75}{gray}{0.75}
-\newcommand{\hsp}{\hspace{20pt}}
+\newcommand{\hsp}{\hspace{10pt}}
 % \usepackage[indentafter]{titlesec}
 \usepackage{titlesec}
 % {\normalfont\Huge\sffamily\bfseries}
 \titleformat{\chapter}[hang]
-  {\usefont{T1}{qhv}{m}{n}\selectfont\Huge\bfseries}
+  {\sffamily\Large\bfseries}
   {\thechapter\hsp\textcolor{gray75}{$|$}\hsp}
   {0pt}
   {}
+  % {\usefont{T1}{qhv}{m}{n}\selectfont\Large\bfseries}
   % {\MakeUppercase\normalfont\fontsize{20}{19}\sffamily\bfseries}
 
   % {\normalfont\fontsize{15}{16}\sffamily\bfseries}
 % {\normalfont\Large\sffamily\bfseries}
 \titleformat{\section}[hang]
-  {\usefont{T1}{qhv}{m}{n}\selectfont\Large\bfseries}
+  {\sffamily\large\bfseries}
   {\thesection}
   {1em}
   {}
 
+  % {\usefont{T1}{qhv}{m}{n}\selectfont\large\bfseries}
   % {\normalfont\fontsize{14}{16}\sffamily\bfseries\slshape}%
 % {\normalfont\large\sffamily\bfseries\slshape}%
 \titleformat{\subsection}[hang]
-  {\usefont{T1}{qhv}{m}{n}\selectfont\large\bfseries\slshape}%
+  {\sffamily\normalsize\bfseries\slshape}%
   {\thesubsection}
   {1em}
   {}
 
+  % {\usefont{T1}{qhv}{m}{n}\selectfont\normalsize\bfseries\slshape}%
   % {\normalfont\large\sffamily\slshape}%
 % {\normalfont\normalsize\bfseries\sffamily}
+  % {\usefont{T1}{qhv}{m}{n}\selectfont\normalsize\slshape}
 \titleformat{\subsubsection}[hang]
-  {\usefont{T1}{qhv}{m}{n}\selectfont\normalsize\bfseries}
+  {\sffamily\normalsize\slshape}
   {\thesubsubsection}
   {1em}
   {}

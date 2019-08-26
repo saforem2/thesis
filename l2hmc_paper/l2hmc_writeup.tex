@@ -291,7 +291,7 @@ leapfrog sampler.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Forward direction \texorpdfstring{$(d = 1)$}{(d = 1)}:}%
+\section{Forward Direction \texorpdfstring{$(d = 1)$}{(d = 1)}:}%
 \label{sec:lf_forward}
 % \vspace{-20pt}
 \begin{align}
@@ -319,7 +319,7 @@ v, t)$, $\zeta_{3} = (x^{\prime}_{m^{t}}, v, t)$, $\zeta_{4} = (\xpp,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Backward direction \texorpdfstring{$(d = -1)$}{(d = -1)}:}%
+\section{Backward Direction \texorpdfstring{$(d = -1)$}{(d = -1)}:}%
 \label{sec:lf_backward}
 %
 \begin{align}
@@ -544,23 +544,23 @@ to train L2HMC in Alg.~\ref{alg:l2hmc}.
         \item A (potential) energy function, $U: \mathcal{X} \rightarrow
           \mathbb{R}$ and its gradient $\nabla_x U: \mathcal{X} \rightarrow
           \mathcal{X}$\
-          \vspace{-10px}
+          \vspace{-10pt}
         \item Initial distribution over the augmented state space, $q$
-          \vspace{-10px}
+          \vspace{-10pt}
         \item Number of iterations, $N_{\mathrm{train}}$
-          \vspace{-10px}
+          \vspace{-10pt}
         \item Number of leapfrog steps, $N_{\mathrm{LF}}$
-          \vspace{-10px}
+          \vspace{-10pt}
         \item Learning rate schedule, ${(\alpha_{t})}_{t\leq N_{\text{train}}}$
-          \vspace{-10px}
+          \vspace{-10pt}
         \item Batch size, $N_{\mathrm{samples}}$
-          \vspace{-10px}
+          \vspace{-10pt}
         \item Scale parameter, $\lambda$
-          \vspace{-10px}
+          \vspace{-10pt}
         \item Regularization strength, $\lambda_b$
       \end{enumerate}
     }\;
-    \vspace{-15px}
+    \vspace{-15pt}
     Initialize the parameters of the sampler, $\theta$\;
     Initialize ${\{\xi_{p^{(i)}}\}}_{i\leq N_{\mathrm{samples}}}$ from
     $q{(\xi)}$\; \For{$t = 0$ \KwTo\ $N_{\mathrm{train}}$}{%
@@ -894,8 +894,8 @@ and $\beta_{f} = 5$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Modified loss function for \texorpdfstring{$U(1)$}{U (1)} gauge
-model}%
+\subsection{Modified Loss Function for \texorpdfstring{$U(1)$}{U (1)} Gauge
+Model}%
 \label{subsec:l2hmc_modifiedloss}
 %
 In order to more accurately define the ``distance'' between two different

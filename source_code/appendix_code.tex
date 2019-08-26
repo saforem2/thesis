@@ -60,29 +60,37 @@ This code is also publicly hosted at
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GAUGE_MODEL_ARGS {{{
 \clearpage
-\section{l2hmc-qcd/args/gauge\_model\_args.txt}
+\section{l2hmc-qcd/args/args.txt}
 \inputminted[
 frame=lines,
 fontsize=\footnotesize,
 linenos,
-]{text}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/args/gauge_model_args.txt}
+]{text}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/args/args.txt}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GAUGE_MODEL_MAIN {{{
 \clearpage
-\section{l2hmc-qcd/gauge\_model\_main.py}
+\section{l2hmc-qcd/main.py}
 \inputminted[%
-]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/gauge_model_main.py}
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/main.py}
+% }}}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GAUGE_MODEL_MAIN {{{
+\clearpage
+\section{l2hmc-qcd/inference.py}
+\inputminted[%
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/inference.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GAUGE_MODEL {{{
 \clearpage
-\section{l2hmc-qcd/models/gauge\_model.py}
+\section{l2hmc-qcd/models/model.py}
 \inputminted[%
 frame=lines,
-]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/models/gauge_model.py}
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/models/model.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,7 +98,7 @@ frame=lines,
 \clearpage
 \section{l2hmc-qcd/dynamics/gauge\_dynamics.py}
 \inputminted[%
-]{python}{/Users/saforem2/anl/l2hmc-qcd/l2hmc-qcd/dynamics/gauge_dynamics.py}
+]{python}{/Users/saforem2/anl/l2hmc-qcd/l2hmc-qcd/dynamics/dynamics.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -101,20 +109,11 @@ frame=lines,
 ]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/lattice/lattice.py}
 % }}}
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% CONV_NET_3D {{{
+% CONV_NET {{{
 \clearpage
-\section{l2hmc-qcd/network/conv\_net3d.py}
+\section{l2hmc-qcd/network/conv\_net.py}
 \inputminted[%
-]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net3d.py}
-% }}}
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% CONV_NET_2D {{{
-\clearpage
-\section{l2hmc-qcd/network/conv\_net2d.py}
-\inputminted[%
-]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net2d.py}
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/conv_net.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,6 +122,14 @@ frame=lines,
 \section{l2hmc-qcd/network/generic\_net.py}
 \inputminted[%
 ]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/generic_net.py}
+% }}}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GENERIC_NET {{{
+\clearpage
+\section{l2hmc-qcd/network/network.py}
+\inputminted[%
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/network/network.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -136,17 +143,17 @@ frame=lines,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GAUGE_MODEL_TRAINER {{{
 \clearpage
-\section{l2hmc-qcd/trainers/gauge\_model\_trainer.py}
+\section{l2hmc-qcd/trainers/trainer.py}
 \inputminted[%
-]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/trainers/gauge_model_trainer.py}
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/trainers/trainer.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GAUGE_MODEL_RUNNER {{{
 \clearpage
-\section{l2hmc-qcd/runners/gauge\_model\_runner.py}
+\section{l2hmc-qcd/runners/runner.py}
 \inputminted[%
-]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/runners/gauge_model_runner.py}
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/runners/runner.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -183,10 +190,10 @@ frame=lines,
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PLOT_UTILS {{{
-\clearpage
-\section{l2hmc-qcd/plotters/plot\_utils.py}
-\inputminted[%
-]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/plot_utils.py}
+% \clearpage
+% \section{l2hmc-qcd/plotters/plot\_utils.py}
+% \inputminted[%
+% ]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/plotters/plot_utils.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -195,6 +202,13 @@ frame=lines,
 \section{l2hmc-qcd/utils/parse\_args.py}
 \inputminted[%
 ]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/parse_args.py}
+% }}}
+%
+% PARSE_ARGS {{{
+\clearpage
+\section{l2hmc-qcd/utils/parse\_inference\_args.py}
+\inputminted[%
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/parse_inference_args.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -207,9 +221,9 @@ frame=lines,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TF_LOGGING {{{
 \clearpage
-\section{l2hmc-qcd/utils/tf\_logging.py}
+\section{l2hmc-qcd/loggers/summary\_utils.py}
 \inputminted[%
-]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/utils/tf_logging.py}
+]{python}{/Users/saforem2/ANL/l2hmc-qcd/l2hmc-qcd/loggers/summary_utils.py}
 % }}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

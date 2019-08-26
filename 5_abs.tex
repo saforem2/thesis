@@ -1,8 +1,33 @@
 \begin{doublespace}
-\begin{tightcenter}
-ABSTRACT
-\mylinespacing%
-\end{tightcenter}
+% \begin{tightcenter}
+% ABSTRACT
+% \mylinespacing%
+% \end{tightcenter}
+%
+
+\chapter*{Abstract}
+In this work we explore how lattice gauge theory stands to benefit from new
+developments in machine learning, and look at two specific examples that
+illustrate this point.
+%
+We begin with a brief overview of selected topics in machine learning for those
+who may be unfamiliar, and provide a simple example that helps to show how
+these ideas are carried out in practice.
+
+After providing the relevant background information, we then introduce an
+example of renormalization group (RG) transformations, inspired by the tensor
+RG, that can be used for arbitrary image sets, and look at applying this idea
+to equilibrium configurations of the two-dimensional Ising model.
+
+The second main idea presented in this thesis involves using machine learning
+to improve the efficiency of Markov Chain Monte Carlo (MCMC) methods.
+%
+Explicitly, we describe a new technique for performing Hamiltonian Monte Carlo
+(HMC) simulations using an alternative leapfrog integrator that is
+parameterized by weights in a neural network.
+%
+This work is based on the L2HMC (`Learning to Hamiltonian Monte Carlo')
+algorithm introduced in~\cite{2017arXiv171109268L}.
 
 % Prior to your first thesis deposit, replace this text with the text of your scientific/ scholarly abstract. The text
 % of this abstract should be double spaced and each new paragraph should be indented. This text may be altered between
@@ -13,11 +38,6 @@ ABSTRACT
 % simulations.
 % We begin with a brief overview of selected topics in machine learning for those who may be unfamiliar, and provide a
 % simple example that helps to show how these ideas are carried out in practice.
-In this work we explore how lattice gauge theory stands to benefit from new developments in machine learning, and look
-at two specific examples that illustrate this point.
-%
-We begin with a brief overview of selected topics in machine learning for those who may be unfamiliar, and provide a
-simple example that helps to show how these ideas are carried out in practice.
 
 % Using the example of configurations generated with the worm algorithm for the
 % two-dimensional Ising model, we propose  renormalization group (RG)
@@ -26,10 +46,6 @@ simple example that helps to show how these ideas are carried out in practice.
 % in link occupation  under the RG transformation, suggest ways to obtain data
 % collapse, and compare with the two state tensor RG approximation near the fixed
 % point.
-
-After providing the relevant background information, we then introduce an example of renormalization group (RG)
-transformations, inspired by the tensor RG, that can be used for arbitrary image sets, and look at applying this idea
-to equilibrium configurations of the two-dimensional Ising model.
 % generated using the worm algorithm and represented as
 % grayscale images.
 % %
@@ -42,15 +58,6 @@ to equilibrium configurations of the two-dimensional Ising model.
 %
 % From this, we discover that the phase transformation can be characterized by the eigenvalue of the first principal
 % component, and construct an analytical framework that justifies this relationship.
-%
-The second main idea presented in this thesis involves using machine learning to improve the efficiency of Markov Chain
-Monte Carlo (MCMC) methods.
-%
-Explicitly, we describe a new technique for performing Hamiltonian Monte Carlo (HMC) simulations using an alternative
-leapfrog integrator that is parameterized by weights in a neural network.
-%
-This work is based on the L2HMC (`Learning to Hamiltonian Monte Carlo') algorithm introduced
-in~\cite{2017arXiv171109268L}.
 %
 % We first look at applying this technique to a two-dimensional Gaussian Mixture Model and demonstrate a remarkable
 % improvement in performance compared to the traditional HMC.

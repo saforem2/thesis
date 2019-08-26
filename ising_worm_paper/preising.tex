@@ -227,7 +227,7 @@ This is illustrated in Fig.~\ref{fig:eye}.
 Possible applications are briefly discussed in the Conclusions and illustrated
 with the CIFAR database in Section~\ref{sec:cifar}. 
 
-\section{From loops to images}%
+\section{From Loops to Images}%
 \label{configs_as_images}
 
 In the following we consider the two-dimensional Ising model with spins
@@ -355,7 +355,7 @@ configuration, $N_b$ as
     \label{eq:link_sum}
 \end{equation}
 %
-\section{PCA and criticality}%
+\section{PCA and Criticality}%
 \label{sec:pca}
 Having now sets of images for a range of temperatures, we can apply
 PCA~\cite{Bishop}.
@@ -434,7 +434,7 @@ confirmation of the approximate validity of Eq.~(\ref{eq:eigval_delta_Nb}).
  \label{fig:eigval_fluctuations_unblocked}
 \end{figure}
 %
-\section{TRG coarse-graining}%
+\section{TRG Coarse-graining}%
 \label{sec:trg}
 So far we  have sampled the legal graphs of the high temperature expansion of
 the Ising model using the worm algorithm.
@@ -586,7 +586,7 @@ effective size $L_{\mathrm{eff}}=L/b^\ell$.
 The remainder of this chapter will be dedicated towards obtaining data collapse
 for $\langle N_b \rangle$ calculated with successive blockings.
 
-\section{Image coarse-graining}%
+\section{Image Coarse-graining}%
 \label{sec:rgimages}
 In an attempt to explicitly connect the ideas from RG theory to similar
 concepts in machine learning, we will implement a coarse-graining procedure
@@ -665,7 +665,7 @@ involved procedures.
 %
 This is not discussed hereafter. 
 
-\section{Partial data collapse for blocked images}%
+\section{Partial Data Collapse for Blocked Images}%
 \label{sec:collapse}
 In this section, we study the properties of $\langle N_b\rangle$  obtained for
 successive blockings with the $1+1\rightarrow0$ rule starting with
@@ -758,7 +758,7 @@ splits them and there is no collapse on that side.
 %
 This is illustrated in Fig.~\ref{fig:imagecollapsed}.  
 
-\section{TRG calculation of \texorpdfstring{$\langle N_b \rangle$}{<Nb>}}%
+\section{TRG Calculation of \texorpdfstring{$\langle N_b \rangle$}{<Nb>}}%
 \label{sec:nbtrg}
 Using the tensor method we were able to calculate $\langle N_{b} \rangle$ to
 compare with the worm algorithm.
@@ -929,9 +929,9 @@ sides of the transition.
 \label{fig:Nb_2s_HOTRG}
 \end{figure*}
 %
-\section{Technical results}%
+\section{Technical Results}%
 \label{sec:technical_results}
-\subsection{Loop representation}%
+\subsection{Loop Representation}%
 \label{ssec:loop_representation}
 We can rewrite the Ising partition function in terms of bonds between
 neighboring sites $\langle i , j \rangle$.
@@ -992,7 +992,7 @@ critical slowing down.
 %
 This is essential near the critical temperature $T_c$.
 
-\subsection{Heat capacity}%
+\subsection{Heat Capacity}%
 \label{ssec:heat_capacity}
 One striking feature of the second order transition for the two-dimensional
 Ising model is the logarithmic divergence of the specific heat density at the
@@ -1055,7 +1055,7 @@ The singularity near $T_c$ is known from Onsager's solution:
 %
 This implies Eq.~(\ref{eq:specific_heat_fluctuation_eq2}).  
 %
-\subsection{Monte Carlo implementation}%
+\subsection{Monte Carlo Implementation}%
 \label{ssec:monte_carlo_implementation}
 We can proceed to sample the closed path configuration space using the worm
 algorithm~\cite{prok87}.
@@ -1119,7 +1119,7 @@ Results for other lattice sizes that we have simulated are similar.
 	 \label{Kcompare}
 \end{figure}
 %
-\subsection{Conjecture about \texorpdfstring{$\lambda_{\max}$}{λmax}}%
+\subsection{Conjecture About \texorpdfstring{$\lambda_{\max}$}{λmax}}%
 \label{ssec:conjecture}
 Using the Monte Carlo algorithm outlined above, we can calculate the average
 number of occupied bonds at a particular temperature by averaging over all
@@ -1360,7 +1360,7 @@ Fig.~\ref{fig:twice_visited_sites_ratio}.
 %
 %
 
-\subsection{Illustration of alternate blockings}%
+\subsection{Illustration of Alternate Blockings}%
 \label{subsec:altb}
 In Fig~\ref{fig:alt_blockings} we consider the alternative blocking procedures:
 $1 + 1 \rightarrow 1$ and $1 + 1 \rightarrow 2$.
@@ -1398,7 +1398,7 @@ $1 + 1 \rightarrow 1$ and $1 + 1 \rightarrow 2$.
 %
 % \end{widetext}
 %
-\section{Possible applications: From Images to Loops}%
+\section{Possible Applications: From Images to Loops}%
 \label{sec:cifar} 
 Having better understood how these RG transformations can be used to describe
 the 2D Ising model near criticality, we began to look for possible applications

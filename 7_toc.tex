@@ -1,6 +1,15 @@
-\setcounter{tocdepth}{4} % can change 2 for deeper levels
+% \setcounter{tocdepth}{4} % can change 2 for deeper levels
+\renewcommand\cfttoctitlefont{\usefont{T1}{qhv}{m}{n}\selectfont\Large\bfseries}
+\renewcommand{\cftloftitlefont}{\usefont{T1}{qhv}{m}{n}\selectfont\Large\bfseries}
+% {\usefont{T1}{qhv}{m}{n}\selectfont\bfseries\hfill\Large\MakeUppercase}
+  % {\thechapter\hsp\textcolor{gray75}{$|$}\hsp}
+% {\hfill\Large\bfseries}
+\renewcommand\cftaftertoctitle{\hfill\mbox{}}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
 \tableofcontents
+\addtocontents{toc}{\protect\setcounter{tocdepth}{4}}
 % \newpage
 % \listoftables
 \newpage
 \listoffigures
+

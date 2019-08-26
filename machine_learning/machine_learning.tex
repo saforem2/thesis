@@ -531,7 +531,7 @@ we will show, the values of the error terms in the next layer, the computation
 of these terms proceeds backwards from the output layer down to the input layer
 which is where the term \emph{backpropagation} (of errors) gets its name.
 %
-\subsubsection{Output layer}
+\subsubsection{Output Layer}
 Starting from the final layer, backpropagation calculates the
 value\footnote{recall we are considering a one-output neural network, hence the
 subscript $1$ and not $j$} $\delta_{1}^{m}$.
@@ -562,7 +562,7 @@ $\mathcal{L}$ with respect to a weight in the final layer $w_{i1}^{m}$ is
 \label{eq:output_layer}
 \end{equation}
 
-\subsubsection{Hidden layers}
+\subsubsection{Hidden Layers}
 Now, we calculate the partial derivatives for the hidden layers, again using
 the multivariate chain rule.
 %
@@ -729,7 +729,7 @@ invariance~\cite{lecun1995convolutional}:
 % $\mathrm{height}\,\times\,\mathrm{width}\,\times\,[\mathrm{red},
 % \,\mathrm{green},\, \mathrm{blue}]$ pixels.
 %
-\subsection{Local receptive fields}
+\subsection{Local Receptive Fields}
 When dealing with high-dimensional inputs such as images, it is impractical to
 fully-connect each neuron to all neurons in the previous volume because such a
 network architecture does not take into account the spatial structure of the
@@ -843,7 +843,7 @@ spatially.
 \label{fig:local_receptive_field}
 \end{figure}
 %
-\subsection{Shared weights}
+\subsection{Shared Weights}
 A parameter sharing scheme is used in convolutional layers to control the
 number of free parameters.
 %

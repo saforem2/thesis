@@ -1,4 +1,4 @@
-\documentclass[11pt,notitlepage]{report}
+\documentclass[10pt,notitlepage]{report}
 \usepackage{thesis}
 \usepackage{preamble}
 \usepackage{import}
@@ -19,6 +19,9 @@
 \begin{document}
 
 \maketitle
+
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
 
 % frontmatter_settings {{{
 %% roman for frontmatter
@@ -51,16 +54,14 @@ The University of Iowa
 Thesis Supervisor: \myadvisor%
 \end{tightcenter}
 %
-\newpage
-\signaturepg%
+% \newpage
+% \signaturepg%
 % }}}
 %  separate_pages {{{
 %% copyright page %%
 % \include{1_copyright}
 %% copyright page %%
 
-\pagenumbering{roman} 
-\setcounter{page}{2}
 %% dedication page %%
 % \include{2_dedication}
 %% dedication page %%
@@ -69,6 +70,8 @@ Thesis Supervisor: \myadvisor%
 % \include{3_epigraph}
 %% epigraph page %%
 
+\pagenumbering{roman} 
+\setcounter{page}{1}
 %% ack page %%
 \include{4_ack}
 %% ack page %%
@@ -104,9 +107,18 @@ Thesis Supervisor: \myadvisor%
 \chapter{Machine Learning: An Overview}%
 \label{chap:machine_learning}
 \subfile{machine_learning/machine_learning.tex}
-
 \chapter{Unsupervised Learning: Ising Worms}%
 \label{chap:unsupervised_learning}
+Portions of this chapter have appeared in:
+\begin{center}
+  ``Examples of renormalization group transformations for image sets'', S.
+  Foreman, J. Giedt, Y. Meurice, and J. Unmuth-Yockey, \textit{Phys. Rev. E},
+  \textbf{98},
+  \href{https://journals.aps.org/pre/abstract/10.1103/PhysRevE.98.052129}{052129}
+  -- Published 26 November 2018
+\end{center}
+ % @article{Foreman_Giedt_Meurice_Unmuth-Yockey_2018, title={Examples of renormalization group transformations for image sets}, volume={98}, ISSN={2470-0045, 2470-0053}, url={https://link.aps.org/doi/10.1103/PhysRevE.98.052129}, DOI={10.1103/PhysRevE.98.052129}, number={5}, journal={Physical Review E}, author={Foreman, Samuel and Giedt, Joel and Meurice, Yannick and Unmuth-Yockey, Judah}, year={2018}, month={Nov} }
+
 \subfile{ising_worm_paper/preising.tex}
 %
 \chapter{Markov Chain Monte Carlo (MCMC)}%
