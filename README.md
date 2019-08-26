@@ -31,7 +31,7 @@ Explicitly, we describe a new technique for performing Hamiltonian Monte Carlo
 (HMC) simulations using an alternative leapfrog integrator that is
 parameterized by weights in a neural network.
 %
-This work is based on the L2HMC (`Learning to Hamiltonian Monte
-Carlo')[https://arxiv.org/abs/1711.09268]
+This work is based on the L2HMC [`Learning to Hamiltonian Monte
+Carlo'](https://arxiv.org/abs/1711.09268)
 algorithm.
 
